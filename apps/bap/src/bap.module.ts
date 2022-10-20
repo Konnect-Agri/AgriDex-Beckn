@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { BapController } from './bap.controller';
 import { BapService } from './bap.service';
+import { SearchModule } from './search/search.module';
 
 @Module({
-  imports: [],
+  imports: [SearchModule, ConfigModule.forRoot({ isGlobal: true })],
   controllers: [BapController],
   providers: [BapService],
 })
-export class BapModule {}
+export class BapModule { }
