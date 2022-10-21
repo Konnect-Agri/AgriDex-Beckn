@@ -4,9 +4,12 @@ import IntentInterface from 'dsep-beckn-schema/schemas/Intent.interface';
 export class SearchDTO {
   context: ContextInterface;
   message: {
-    block?: string;
-    district?: string;
-    bank_name?: string;
     intent?: IntentInterface;
   };
+}
+
+export class SearchReq {
+  block?: string;
+  district?: string;
+  bank_name?: string;
 }
