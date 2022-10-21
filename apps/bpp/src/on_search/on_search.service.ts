@@ -52,27 +52,25 @@ export class OnSearchService {
         },
         message: {
           catalogue: {
-            items: [
-              prods.map((prod) => {
-                return {
-                  descriptor: {
-                    name: prod.loan_product,
-                  },
-                  price: prod.maximum_loan_amt,
-                  provider: {
-                    id: prod.bank_name,
-                  },
-                  tags: {
-                    block: prod.block,
-                    district: prod.district,
-                    loan_tenure: prod.loan_tenure,
-                    maximum_loan_amt: prod.maximum_loan_amt,
-                    interest_rate: prod.interest_rate,
-                    processing_charges: prod.processing_charges,
-                  },
-                };
-              }),
-            ],
+            items: prods.map((prod) => {
+              return {
+                descriptor: {
+                  name: prod.loan_product,
+                },
+                price: prod.maximum_loan_amt,
+                provider: {
+                  id: prod.bank_name,
+                },
+                tags: {
+                  block: prod.block,
+                  district: prod.district,
+                  loan_tenure: prod.loan_tenure,
+                  maximum_loan_amt: prod.maximum_loan_amt,
+                  interest_rate: prod.interest_rate,
+                  processing_charges: prod.processing_charges,
+                },
+              };
+            }),
           },
         },
       };
