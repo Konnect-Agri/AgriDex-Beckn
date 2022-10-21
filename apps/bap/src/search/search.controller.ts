@@ -8,6 +8,7 @@ export class SearchController {
 
   @Post()
   create(@Body() searchDto: SearchReq) {
+    console.log('searchReq: ', searchDto);
     return this.searchService.handleSearch(searchDto);
   }
 }

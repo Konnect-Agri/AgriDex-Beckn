@@ -13,13 +13,6 @@ export class SearchService {
           'Content-Type': 'application/json',
         },
       };
-      /*context: ContextInterface;
-        message: {
-        block?: string;
-        district?: string;
-        bank_name?: string;
-        intent?: IntentInterface;
-      };*/
       const requestBody = {
         context: {
           domain: {},
@@ -36,9 +29,9 @@ export class SearchService {
         message: {
           intent: {
             tags: {
-              block: searchReq.block,
-              district: searchReq.district,
-              bank_name: searchReq.bank_name,
+              block: searchReq.message.block,
+              district: searchReq.message.district,
+              bank_name: searchReq.message.bank_name,
             },
           },
         },

@@ -9,7 +9,9 @@ export class SearchDTO {
 }
 
 export class SearchReq {
-  block?: string;
-  district?: string;
-  bank_name?: string;
+  message: {
+    block?: string;
+    district?: string;
+    bank_name?: string;
+  };
 }
