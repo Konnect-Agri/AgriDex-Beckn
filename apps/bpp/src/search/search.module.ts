@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { OnSearchService } from './on_search.service';
-import { OnSearchController } from './on_search.controller';
+import { OnSearchService } from './search.service';
+import { OnSearchController } from './search.controller';
 import { HttpModule } from '@nestjs/axios';
 
 @Module({

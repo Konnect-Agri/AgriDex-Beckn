@@ -7,9 +7,9 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { OnSearchDTO } from './dto/on_search.dto';
-import { SearchDTO } from './dto/search.dto';
-import { OnSearchService } from './on_search.service';
+import { OnSearchDTO } from './dto/search.dto';
+import { SearchDTO } from './dto/on-search.dto';
+import { OnSearchService } from './search.service';
 
 @Controller('on-search')
 export class OnSearchController {
