@@ -1,7 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { lastValueFrom, map } from 'rxjs';
-import { SearchDTO, SearchReq } from './dto/search.dto';
+import { SearchDTO, SearchReq } from './dto/on-search.dto';
 
 @Injectable()
 export class SearchService {

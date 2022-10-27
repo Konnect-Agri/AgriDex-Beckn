@@ -1,5 +1,5 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import { SearchDTO, SearchReq } from './dto/search.dto';
+import { SearchDTO, SearchReq } from './dto/on-search.dto';
 import { SearchService } from './on-search.service';
 
 @Controller('on-search')
