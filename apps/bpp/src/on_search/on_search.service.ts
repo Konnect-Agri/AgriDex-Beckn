@@ -74,6 +74,7 @@ export class OnSearchService {
                 },
                 items: providerWise[provider].map((prod) => {
                   return {
+                    id: prod.id,
                     descriptor: {
                       name: prod.loan_product,
                     },
