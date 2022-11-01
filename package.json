@@ -10,7 +10,7 @@
     "build": "nest build",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start": "nest start",
-    "start:all": "concurrently \"yarn start:dev bap\" \"yarn start:dev bg\" \"yarn start:dev bpp\"",
+    "start:all": "concurrently \"yarn start:dev bap\" \"yarn start:dev bg\" \"yarn start:dev bpp\" \"yarn start:dev agri-dex-beckn \"",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
@@ -28,11 +28,16 @@
     "@nestjs/core": "^9.1.4",
     "@nestjs/mapped-types": "^1.2.0",
     "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/platform-socket.io": "^9.1.6",
+    "@nestjs/websockets": "^9.1.6",
+    "@socket.io/redis-adapter": "^7.2.0",
     "concurrently": "^7.4.0",
     "dsep-beckn-schema": "^1.0.1",
+    "redis": "^4.3.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^7.2.0"
+    "rxjs": "^7.2.0",
+    "socket.io": "^4.5.3"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
