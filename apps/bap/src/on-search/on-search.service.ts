@@ -6,7 +6,7 @@ import { SearchDTO, SearchReq } from './dto/on-search.dto';
 @Injectable()
 export class SearchService {
   constructor(private readonly httpService: HttpService) { }
-  async handleSearch(searchReq: SearchReq) {
+  async handleSearch(searchReq: SearchDTO) {
     try {
       const requestOptions = {
         headers: {
@@ -14,24 +14,17 @@ export class SearchService {
         },
       };
       const requestBody = {
-        context: {
-          domain: {},
-          country: {},
-          city: {},
-          action: 'SEARCH',
-          core_version: '1.0',
-          bap_id: '101',
-          bap_uri: 'http://localhost:3000',
-          transaction_id: '101',
-          message_id: '201',
-          timestamp: Date.now(),
-        },
+        context: searchReq.context,
         message: {
           intent: {
             tags: {
-              block: searchReq.message.block,
-              district: searchReq.message.district,
-              bank_name: searchReq.message.bank_name,
+              block:
+                searchReq.message.catalogue.providers[0].locations[0].descriptor
+                  .name,
+              district:
+                searchReq.message.catalogue.providers[0].locations[1].descriptor
+                  .name,
+              bank_name: searchReq.message.catalogue.providers[0].id,
             },
           },
         },

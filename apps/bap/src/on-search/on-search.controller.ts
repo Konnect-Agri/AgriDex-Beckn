@@ -7,7 +7,7 @@ export class SearchController {
   constructor(private readonly searchService: SearchService) { }
 
   @Post()
-  create(@Body() searchDto: SearchReq) {
+  create(@Body() searchDto: SearchDTO) {
     // console.log('searchReq: ', searchDto);
     return this.searchService.handleSearch(searchDto);
   }

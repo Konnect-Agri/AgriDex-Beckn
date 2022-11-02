@@ -4,10 +4,22 @@ import IntentInterface from 'dsep-beckn-schema/schemas/Intent.interface';
 export class SearchDTO {
   context: ContextInterface;
   message: {
-    intent?: IntentInterface;
+    catalogue: {
+      descriptor?: {
+        name: string;
+      };
+      providers?: ReadonlyArray<{
+        id: string;
+        locations: ReadonlyArray<{
+          id: string;
+          descriptor: {
+            name: string;
+          };
+        }>;
+      }>;
+    };
   };
 }
-
 export class SearchReq {
   message: {
     block?: string;

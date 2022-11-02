@@ -28,6 +28,7 @@ export class SearchGateway {
     @MessageBody() body: SearchQuery,
     @ConnectedSocket() client: Socket,
   ) {
+    console.log('search message received: ');
     const transactionId = Date.now();
     client.join(transactionId.toString());
     try {
@@ -41,13 +42,29 @@ export class SearchGateway {
         city: { code: 'DEL' },
         core_version: '0.9.3',
         bap_id: 101,
-        bap_uri: 'http://localhost:3000',
+        bap_uri: 'http://localhost:3000/on-search',
       };
 
       const requestMessageCatalogue = {
-        descriptor: {
-          name: body.query,
-        },
+        providers: [
+          {
+            id: body.filters.bank_name,
+            locations: [
+              {
+                id: 'block',
+                descriptor: {
+                  name: body.filters.block,
+                },
+              },
+              {
+                id: 'district',
+                descriptor: {
+                  name: body.filters.district,
+                },
+              },
+            ],
+          },
+        ],
         // TODO: add filters after review from Ravi
       };
       const requestBody = {
@@ -63,17 +80,16 @@ export class SearchGateway {
       };
       const responseData = await lastValueFrom(
         this.httpService
-          .post('http://localhost:3000/search', requestBody, requestOptions)
+          .post('http://localhost:3000/on-search', requestBody, requestOptions)
           .pipe(
             map((response) => {
               return response.data;
             }),
           ),
       );
+      console.log('resp received: ', responseData);
       //sending the response to the corresponding client
-      this.server
-        .to(transactionId.toString())
-        .emit('searchResponse: ', responseData);
+      this.server.to(transactionId.toString()).emit('search', responseData);
     } catch (err) {
       console.error('err: ', err);
       throw new InternalServerErrorException();
