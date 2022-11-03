@@ -1,5 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { response } from 'express';
 import { lastValueFrom, map } from 'rxjs';
 import { SearchDTO } from './dto/on-search.dto';
 
@@ -96,7 +97,13 @@ export class OnSearchService {
           },
         },
       };
-      return responseCatalogue;
+
+      //BPP callback to BAP
+      return this.httpService.post(
+        searchDTO.context.bap_uri,
+        response,
+        requestOptions,
+      );
     } catch (err) {
       console.log('err: ', err);
       throw new InternalServerErrorException();
