@@ -23,14 +23,23 @@ export class SearchGateway {
 
   @WebSocketServer() server: Server;
 
+  @SubscribeMessage('bapConnection')
+  async handleBAPConnection(
+    @MessageBody() body: string,
+    @ConnectedSocket() bap: Socket,
+  ) {
+    console.log('bap connection body: ', body);
+    bap.join('bapLobby');
+  }
+
   @SubscribeMessage('search')
   async handleSearch(
     @MessageBody() body: SearchQuery,
     @ConnectedSocket() client: Socket,
   ) {
-    console.log('search message received: ');
-    const transactionId = Date.now();
-    client.join(transactionId.toString());
+    console.log('search message received: ', body);
+    const transactionId = Date.now() + client.id;
+    client.join(transactionId);
     try {
       const requestContext = {
         transaction_id: transactionId.toString(),
@@ -44,7 +53,7 @@ export class SearchGateway {
         bap_id: 101,
         bap_uri: 'http://localhost:3000/on-search',
       };
-
+      // TODO: Get this filter schema reviewed
       const requestMessageCatalogue = {
         providers: [
           {
@@ -65,35 +74,29 @@ export class SearchGateway {
             ],
           },
         ],
-        // TODO: add filters after review from Ravi
       };
-      const requestBody = {
+      const payload = {
         context: requestContext,
         message: {
           catalogue: requestMessageCatalogue,
         },
       };
-      const requestOptions = {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      };
-      const responseData = await lastValueFrom(
-        this.httpService
-          .post('http://localhost:3000/on-search', requestBody, requestOptions)
-          .pipe(
-            map((response) => {
-              return response.data;
-            }),
-          ),
-      );
-      console.log('resp received: ', responseData);
-      //sending the response to the corresponding client
-      this.server.to(transactionId.toString()).emit('search', responseData);
+      // emitting the request to BAP Lobby
+      this.server.to('bapLobby').emit('search', payload);
     } catch (err) {
       console.error('err: ', err);
       throw new InternalServerErrorException();
     }
+  }
+
+  @SubscribeMessage('searchResponse')
+  handleResponse(
+    @MessageBody() searchResponse: any,
+    @ConnectedSocket() client: Socket,
+  ) {
+    // forward the response from the BAP to the client asking it
+    const transaction_id = searchResponse.context.transaction_id;
+    this.server.to(transaction_id).emit('searchResponse', searchResponse);
   }
 
   handleConnection(@ConnectedSocket() client: Socket, ...args: any[]) {

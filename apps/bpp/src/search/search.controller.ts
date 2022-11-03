@@ -11,7 +11,7 @@ import { OnSearchDTO } from './dto/search.dto';
 import { SearchDTO } from './dto/on-search.dto';
 import { OnSearchService } from './search.service';
 
-@Controller('on-search')
+@Controller('search')
 export class OnSearchController {
   constructor(private readonly onSearchService: OnSearchService) { }
 

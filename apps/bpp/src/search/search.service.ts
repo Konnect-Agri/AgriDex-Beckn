@@ -1,6 +1,5 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { response } from 'express';
 import { lastValueFrom, map } from 'rxjs';
 import { SearchDTO } from './dto/on-search.dto';
 
@@ -9,7 +8,9 @@ export class OnSearchService {
   constructor(private readonly httpService: HttpService) { }
 
   async handleOnSearch(searchDTO: SearchDTO) {
+    console.log('in BPP');
     try {
+      console.log('in bpp');
       console.log('search message: ', searchDTO.message);
       const block: string = searchDTO.message.intent.tags.block || '';
       const district: string = searchDTO.message.intent.tags.district || '';
@@ -97,13 +98,24 @@ export class OnSearchService {
           },
         },
       };
-
+      console.log('responseCatalogue: ', responseCatalogue);
       //BPP callback to BAP
-      return this.httpService.post(
-        searchDTO.context.bap_uri,
-        response,
-        requestOptions,
+      await lastValueFrom(
+        this.httpService.post(
+          searchDTO.context.bap_uri,
+          responseCatalogue,
+          requestOptions,
+        ),
       );
+      const ack = {
+        message: {
+          ack: {
+            status: 'ACK',
+          },
+        },
+      };
+      // returning ack to BG
+      return ack;
     } catch (err) {
       console.log('err: ', err);
       throw new InternalServerErrorException();
