@@ -10,7 +10,7 @@
     "build": "nest build",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start": "nest start",
-    "start:all": "concurrently \"yarn start:dev bap\" \"yarn start:dev bg\" \"yarn start:dev bpp\" \"yarn start:dev agri-dex-beckn \"",
+    "start:all": "concurrently \"yarn start:dev agri-dex-beckn \" \"yarn start:dev bap\" \"yarn start:dev bg\" \"yarn start:dev bpp\"",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
@@ -37,7 +37,8 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
-    "socket.io": "^4.5.3"
+    "socket.io": "^4.5.3",
+    "socket.io-client": "^4.5.3"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",

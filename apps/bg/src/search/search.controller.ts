@@ -8,6 +8,7 @@ export class SearchController {
 
   @Post()
   create(@Body() searchDto: SearchDTO) {
+    console.log('BG controller');
     return this.searchService.handleSearch(searchDto);
   }
 }

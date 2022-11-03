@@ -8,7 +8,9 @@ export class OnSearchService {
   constructor(private readonly httpService: HttpService) { }
 
   async handleOnSearch(searchDTO: SearchDTO) {
+    console.log('in BPP');
     try {
+      console.log('in bpp');
       console.log('search message: ', searchDTO.message);
       const block: string = searchDTO.message.intent.tags.block || '';
       const district: string = searchDTO.message.intent.tags.district || '';
@@ -96,7 +98,24 @@ export class OnSearchService {
           },
         },
       };
-      return responseCatalogue;
+      console.log('responseCatalogue: ', responseCatalogue);
+      //BPP callback to BAP
+      await lastValueFrom(
+        this.httpService.post(
+          searchDTO.context.bap_uri,
+          responseCatalogue,
+          requestOptions,
+        ),
+      );
+      const ack = {
+        message: {
+          ack: {
+            status: 'ACK',
+          },
+        },
+      };
+      // returning ack to BG
+      return ack;
     } catch (err) {
       console.log('err: ', err);
       throw new InternalServerErrorException();
