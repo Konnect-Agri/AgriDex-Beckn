@@ -16,9 +16,11 @@ export class SearchService {
           'Content-Type': 'application/json',
         },
       };
-      // ADD BAP ID and URL in context
-      searchDto.context.bap_id = '101';
-      searchDto.context.bap_uri = `http://${host}`;
+
+      // setting the BAP url in context
+      searchDto.context.bap_id = process.env.BAP_ID;
+      searchDto.context.bap_uri = process.env.BAP_URL;
+
       //TODO: verify the contents of request before deciding on ACK or NACK
 
       // this.httpService.post(searchDto.context.bap_uri, ack, requestOptions);

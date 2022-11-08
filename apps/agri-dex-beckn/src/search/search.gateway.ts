@@ -22,16 +22,6 @@ export class SearchGateway {
 
   @WebSocketServer() server: Server;
 
-  // handling a new BAP opening up a connection
-  @SubscribeMessage('bapConnection')
-  async handleBAPConnection(
-    @MessageBody() body: string,
-    @ConnectedSocket() bap: Socket,
-  ) {
-    console.log('bap connection body: ', body);
-    bap.join('bapLobby');
-  }
-
   // handling a search request from a client
   @SubscribeMessage('search')
   async handleSearch(
@@ -88,10 +78,7 @@ export class SearchGateway {
 
   // remove this method later with the generic response method written below
   @SubscribeMessage('searchResponse')
-  handleSearchResponse(
-    @MessageBody() searchResponse: any,
-    @ConnectedSocket() client: Socket,
-  ) {
+  handleSearchResponse(@MessageBody() searchResponse: any) {
     // forward the response from the BAP to the client asking it
     const transaction_id = searchResponse.context.transaction_id;
     this.server.to(transaction_id).emit('searchResponse', searchResponse);
@@ -136,10 +123,7 @@ export class SearchGateway {
   }
 
   @SubscribeMessage('response')
-  async handleResponse(
-    @MessageBody() response: any,
-    @ConnectedSocket() client: Socket,
-  ) {
+  async handleResponse(@MessageBody() response: any) {
     const transaction_id = response.context.transaction_id;
     this.server.to(transaction_id).emit('searchResponse', response);
     this.server.in(transaction_id).socketsLeave(transaction_id);

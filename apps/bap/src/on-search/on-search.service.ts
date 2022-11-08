@@ -1,11 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import {
-  Injectable,
-  InternalServerErrorException,
-  OnModuleInit,
-} from '@nestjs/common';
-import { lastValueFrom } from 'rxjs';
-import { io, Socket } from 'socket.io-client';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { requestForwarder } from '../utils';
 import { SearchDTO } from './dto/on-search.dto';
 

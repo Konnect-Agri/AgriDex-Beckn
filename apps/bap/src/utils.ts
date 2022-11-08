@@ -12,8 +12,10 @@ const requestForwarder = async (
       headers: {
         'Content-Type': 'application/json',
       },
+      withCredentials: true,
+      mode: 'cors',
     };
-
+    console.log('calling request forwarder');
     return await lastValueFrom(httpService.post(url, reqData, requestOptions));
   } catch (err) {
     console.log('err: ', err);

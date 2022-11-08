@@ -1,5 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { requestForwarder } from 'apps/bap/src/utils';
 import { lastValueFrom, map } from 'rxjs';
 import { SearchDTO } from './dto/on-search.dto';
 
@@ -59,7 +60,7 @@ export class OnSearchService {
 
       const responseCatalogue = {
         context: {
-          ...searchDTO.context
+          ...searchDTO.context,
         },
         message: {
           catalogue: {
@@ -99,12 +100,17 @@ export class OnSearchService {
 
       console.log('responseCatalogue: ', responseCatalogue);
       //BPP callback to BG
-      await lastValueFrom(
-        this.httpService.post(
-          process.env.BG_ONSEARCH_URL,
-          responseCatalogue,
-          requestOptions,
-        ),
+      // await lastValueFrom(
+      //   this.httpService.post(
+      //     process.env.BG_ONSEARCH_URL,
+      //     responseCatalogue,
+      //     requestOptions,
+      //   ),
+      // );
+      requestForwarder(
+        process.env.BG_ONSEARCH_URL,
+        responseCatalogue,
+        this.httpService,
       );
     } catch (err) {
       console.log('err: ', err);

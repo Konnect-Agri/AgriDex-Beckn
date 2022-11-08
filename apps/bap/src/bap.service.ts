@@ -10,12 +10,14 @@ export class BapService {
     return 'Hello World from AgriDex BAP!';
   }
   // TODO: add types for body
-  async handleInitialRequest(body: any) {
+  async handleInitialRequest(body: any, host: string) {
     const action = body.context.action;
     // TODO: add a request validator
     switch (action) {
       case 'search':
         // forward to BG
+        // body.context.bap_id = '101';
+        // body.context.bap_uri = `http://${host}`;
         return await requestForwarder(
           process.env.BG_SEARCH_URL,
           body,

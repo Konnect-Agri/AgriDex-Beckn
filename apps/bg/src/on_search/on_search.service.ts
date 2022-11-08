@@ -10,8 +10,9 @@ export class OnSearchService {
   handleOnSearch(onSearchDto: any, host: string) {
     try {
       // adding bpp url to context
-      onSearchDto.context.bpp_id = '301';
-      onSearchDto.context.bpp_uri = `http://${host}`;
+      console.log('onsearch context: ', onSearchDto.context);
+      onSearchDto.context.bpp_id = process.env.BPP_ID;
+      onSearchDto.context.bpp_uri = process.env.BPP_URL;
       // forwarding the request back to BAP
       console.log('onSearchDto.context.bap_uri: ', onSearchDto.context.bap_uri);
       requestForwarder(
