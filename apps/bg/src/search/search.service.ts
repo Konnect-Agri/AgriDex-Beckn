@@ -6,24 +6,21 @@ import { SearchDTO } from './dto/search.dto';
 @Injectable()
 export class SearchService {
   constructor(private readonly httpService: HttpService) { }
-  async handleSearch(searchDto: SearchDTO) {
+
+  async handleSearch(searchDto: SearchDTO, host: string) {
+    // TODO: add some kind of registry which stores the BAP ids and BPP URLs
     console.log('in BG');
     try {
       const requestOptions = {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: searchDto,
-        redirect: 'follow',
       };
+      // ADD BAP ID and URL in context
+      searchDto.context.bap_id = '101';
+      searchDto.context.bap_uri = `http://${host}`;
       //TODO: verify the contents of request before deciding on ACK or NACK
-      const ack = {
-        message: {
-          ack: {
-            status: 'ACK',
-          },
-        },
-      };
+
       // this.httpService.post(searchDto.context.bap_uri, ack, requestOptions);
       // forward the request to BPP for discovery
       await lastValueFrom(
@@ -33,9 +30,6 @@ export class SearchService {
           requestOptions,
         ),
       );
-
-      // sending acknowlegement response to BAP
-      return ack;
     } catch (err) {
       console.log('err: ', err);
       throw new InternalServerErrorException();

@@ -59,9 +59,7 @@ export class OnSearchService {
 
       const responseCatalogue = {
         context: {
-          ...searchDTO.context,
-          bpp_uri: 'http://localhost:3002/on-search',
-          bpp_id: '301',
+          ...searchDTO.context
         },
         message: {
           catalogue: {
@@ -98,24 +96,16 @@ export class OnSearchService {
           },
         },
       };
+
       console.log('responseCatalogue: ', responseCatalogue);
-      //BPP callback to BAP
+      //BPP callback to BG
       await lastValueFrom(
         this.httpService.post(
-          searchDTO.context.bap_uri,
+          process.env.BG_ONSEARCH_URL,
           responseCatalogue,
           requestOptions,
         ),
       );
-      const ack = {
-        message: {
-          ack: {
-            status: 'ACK',
-          },
-        },
-      };
-      // returning ack to BG
-      return ack;
     } catch (err) {
       console.log('err: ', err);
       throw new InternalServerErrorException();
