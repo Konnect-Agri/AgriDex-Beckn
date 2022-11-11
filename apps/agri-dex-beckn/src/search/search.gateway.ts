@@ -99,33 +99,89 @@ export class SearchGateway {
     // in a single order we need to handle it here at the proxy level
 
     // forwarding the request to BAP
+    try {
+      const newMessageId = Date.now() + client.id;
+      selectQuery.context.message_id = newMessageId.toString();
+      selectQuery.context.timestamp = Date.now();
+      selectQuery.message.order.created_at = Date.now();
+      selectQuery.message.order.updated_at = Date.now();
+      // forwarding the request to BAP
 
-    const transactionId = Date.now() + client.id;
-    const requestContext = {
-      transaction_id: transactionId.toString(),
-      message_id: transactionId.toString(),
-      action: 'search',
-      timestamp: new Date(),
-      domain: 'courses_and_trainings',
-      country: { code: 'IND' },
-      city: { code: 'DEL' },
-      core_version: '0.9.3',
-      bap_id: 101,
-      bap_uri: 'http://localhost:3000/on-search',
-    };
+      const ack = await requestForwarder(
+        selectQuery.context.bap_uri,
+        selectQuery,
+        this.httpService,
+      );
 
-    const payload = {
-      context: requestContext,
-      message: selectQuery,
-    };
-
-    this.server.to('bapLobby').emit('select', payload);
+      console.log('ack: ', ack);
+      client.join(selectQuery.context.transaction_id);
+    } catch (err) {
+      client.emit('error: ', err);
+      client._error(err);
+    }
   }
 
   @SubscribeMessage('response')
   async handleResponse(@MessageBody() response: any) {
+    console.log('response methiod');
     const transaction_id = response.context.transaction_id;
-    this.server.to(transaction_id).emit('searchResponse', response);
+    this.server.to(transaction_id).emit('response', response);
     this.server.in(transaction_id).socketsLeave(transaction_id);
+  }
+
+  @SubscribeMessage('init')
+  async handleInit(
+    @MessageBody() initQuery: any,
+    @ConnectedSocket() client: Socket,
+  ) {
+    console.log('init query: ', initQuery);
+    try {
+      const newMessageId = Date.now() + client.id;
+      initQuery.context.message_id = newMessageId.toString();
+      initQuery.context.timestamp = Date.now();
+      initQuery.message.order.created_at = Date.now();
+      initQuery.message.order.updated_at = Date.now();
+      // forwarding the request to BAP
+
+      const ack = await requestForwarder(
+        initQuery.context.bap_uri,
+        initQuery,
+        this.httpService,
+      );
+
+      console.log('ack: ', ack);
+      client.join(initQuery.context.transaction_id);
+    } catch (err) {
+      client.emit('error: ', err);
+      client._error(err);
+    }
+  }
+  @SubscribeMessage('confirm')
+  async handleConfirm(
+    @MessageBody() confirmQuery: any,
+    @ConnectedSocket() client: Socket,
+  ) {
+    console.log('confirm query: ', confirmQuery);
+    try {
+      const newMessageId = Date.now() + client.id;
+      confirmQuery.context.message_id = newMessageId.toString();
+      confirmQuery.context.timestamp = Date.now();
+      confirmQuery.message.order.created_at = Date.now();
+      confirmQuery.message.order.updated_at = Date.now();
+
+      // forwarding the request to BAP
+
+      const ack = await requestForwarder(
+        confirmQuery.context.bap_uri,
+        confirmQuery,
+        this.httpService,
+      );
+
+      console.log('ack: ', ack);
+      client.join(confirmQuery.context.transaction_id);
+    } catch (err) {
+      client.emit('error: ', err);
+      client._error(err);
+    }
   }
 }

@@ -22,6 +22,6 @@ export class SearchController {
 
     res.json(ack).status(200);
     console.log('final response in seach controller in proxy: ', body);
-    this.searchGateway.handleSearchResponse(body);
+    this.searchGateway.handleResponse(body);
   }
 }

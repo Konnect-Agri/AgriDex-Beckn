@@ -9,6 +9,8 @@ export class OnSelectService {
   // TODO: add selectDTO
   async handleSelectResponse(selectRes: any) {
     // listens to response from the BPP
+
+    // TODO: Verify the request structure
     try {
       const requestOptions = {
         headers: {
