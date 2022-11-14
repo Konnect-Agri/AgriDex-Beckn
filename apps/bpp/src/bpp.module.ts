@@ -6,6 +6,9 @@ import { OnSearchModule } from './search/search.module';
 import { SelectModule } from './select/select.module';
 import { InitModule } from './init/init.module';
 import { ConfirmModule } from './confirm/confirm.module';
+import { UpdateModule } from './update/update.module';
+import { TrackModule } from './track/track.module';
+import { TraclService } from './tracl/tracl.service';
 
 @Module({
   imports: [
@@ -16,8 +19,10 @@ import { ConfirmModule } from './confirm/confirm.module';
     SelectModule,
     InitModule,
     ConfirmModule,
+    UpdateModule,
+    TrackModule,
   ],
   controllers: [BppController],
-  providers: [BppService],
+  providers: [BppService, TraclService],
 })
 export class BppModule { }

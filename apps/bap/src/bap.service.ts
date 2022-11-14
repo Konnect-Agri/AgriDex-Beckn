@@ -23,7 +23,6 @@ export class BapService {
           body,
           this.httpService,
         );
-        break;
       case 'select':
         if (!body.context.bpp_uri) {
           throw new Error('Invalid Context: bpp_uri is missing');
@@ -36,7 +35,6 @@ export class BapService {
           this.httpService,
         );
 
-        break;
       case 'init':
         if (!body.context.bpp_uri) {
           throw new Error('Invalid Context: bpp_uri is missing');
@@ -48,7 +46,6 @@ export class BapService {
           body,
           this.httpService,
         );
-        break;
       case 'confirm':
         if (!body.context.bpp_uri) {
           throw new Error('Invalid Context: bpp_uri is missing');
@@ -60,7 +57,16 @@ export class BapService {
           body,
           this.httpService,
         );
-        break;
+      case 'track':
+        if (!body.context.bpp_uri) {
+          throw new Error('Invalid Context: bpp_uri is missing');
+        }
+
+        return await requestForwarder(
+          body.context.bpp_uri + '/track',
+          body,
+          this.httpService,
+        );
       default:
         throw new Error('Invalid action');
     }

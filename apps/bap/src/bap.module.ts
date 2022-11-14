@@ -7,6 +7,8 @@ import { OnSelectModule } from './on-select/on-select.module';
 import { OnInitModule } from './on-init/on-init.module';
 import { OnConfirmModule } from './on-confirm/on-confirm.module';
 import { HttpModule } from '@nestjs/axios';
+import { OnUpdateModule } from './on-update/on-update.module';
+import { OnTrackModule } from './on-track/on-track.module';
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import { HttpModule } from '@nestjs/axios';
     OnInitModule,
     OnConfirmModule,
     HttpModule,
+    OnUpdateModule,
+    OnTrackModule,
   ],
   controllers: [BapController],
   providers: [BapService],
