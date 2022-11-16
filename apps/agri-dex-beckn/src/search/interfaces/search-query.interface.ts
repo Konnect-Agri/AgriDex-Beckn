@@ -1,6 +1,6 @@
 export interface SearchQuery {
   query: string;
   filters: {
-    [key: string]: string[];
+    [key: string]: string;
   };
 }

@@ -1,9 +1,9 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
-import { SelectService } from './select.service';
+import { InitService } from './init.service';
 
 @Module({
   imports: [HttpModule],
-  providers: [SelectService],
+  providers: [InitService]
 })
-export class SelectModule { }
+export class InitModule { }
