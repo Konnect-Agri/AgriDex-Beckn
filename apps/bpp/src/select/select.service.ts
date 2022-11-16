@@ -1,6 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { requestForwarder } from 'apps/bap/src/utils';
+import { requestForwarder } from 'utils/utils';
 import { lastValueFrom, map } from 'rxjs';
 
 @Injectable()
@@ -51,6 +51,7 @@ export class SelectService {
         context: selectDto.context,
         message: {
           order: {
+            id: selectDto.message.order.id,
             provider: {
               id: selectDto.message.order.provider.id,
               descriptor: {

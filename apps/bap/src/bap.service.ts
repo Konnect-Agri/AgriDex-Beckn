@@ -1,6 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { requestForwarder } from './utils';
+import { requestForwarder } from '../../../utils/utils';
 
 @Injectable()
 export class BapService {
@@ -10,7 +10,7 @@ export class BapService {
     return 'Hello World from AgriDex BAP!';
   }
   // TODO: add types for body
-  async handleInitialRequest(body: any, host: string) {
+  async handleInitialRequest(body: any) {
     const action = body.context.action;
     // TODO: add a request validator
     switch (action) {
@@ -18,8 +18,9 @@ export class BapService {
         // forward to BG
         // body.context.bap_id = '101';
         // body.context.bap_uri = `http://${host}`;
+        console.log('context in BAP search: ', body.context);
         return await requestForwarder(
-          process.env.BG_SEARCH_URL,
+          process.env.BG_URI + '/search',
           body,
           this.httpService,
         );

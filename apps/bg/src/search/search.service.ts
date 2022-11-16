@@ -19,7 +19,7 @@ export class SearchService {
 
       // setting the BAP url in context
       searchDto.context.bap_id = process.env.BAP_ID;
-      searchDto.context.bap_uri = process.env.BAP_URL;
+      searchDto.context.bap_uri = process.env.BAP_URI;
 
       //TODO: verify the contents of request before deciding on ACK or NACK
 
@@ -27,7 +27,7 @@ export class SearchService {
       // forward the request to BPP for discovery
       await lastValueFrom(
         this.httpService.post(
-          process.env.BPP_SEARCH_URL,
+          process.env.BPP_URI + '/search',
           searchDto,
           requestOptions,
         ),

@@ -25,8 +25,6 @@ export class BapController {
       })
       .status(200);
 
-    console.log('req.headers: ', req.headers);
-
-    return this.bapService.handleInitialRequest(body, req.headers['host']);
+    return this.bapService.handleInitialRequest(body);
   }
 }

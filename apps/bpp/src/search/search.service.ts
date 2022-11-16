@@ -1,6 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { requestForwarder } from 'apps/bap/src/utils';
+import { requestForwarder } from 'utils/utils';
 import { lastValueFrom, map } from 'rxjs';
 import { SearchDTO } from './dto/on-search.dto';
 
@@ -12,6 +12,7 @@ export class OnSearchService {
     console.log('in BPP');
     try {
       console.log('in bpp');
+      console.log('search context: ', searchDTO.context);
       console.log('search message: ', searchDTO.message);
       const block: string = searchDTO.message.intent.tags.block || '';
       const district: string = searchDTO.message.intent.tags.district || '';
@@ -108,7 +109,7 @@ export class OnSearchService {
       //   ),
       // );
       requestForwarder(
-        process.env.BG_ONSEARCH_URL,
+        process.env.BG_URI + '/on-search',
         responseCatalogue,
         this.httpService,
       );

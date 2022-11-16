@@ -8,7 +8,6 @@ import { InitModule } from './init/init.module';
 import { ConfirmModule } from './confirm/confirm.module';
 import { UpdateModule } from './update/update.module';
 import { TrackModule } from './track/track.module';
-import { TraclService } from './tracl/tracl.service';
 
 @Module({
   imports: [
@@ -23,6 +22,6 @@ import { TraclService } from './tracl/tracl.service';
     TrackModule,
   ],
   controllers: [BppController],
-  providers: [BppService, TraclService],
+  providers: [BppService],
 })
 export class BppModule { }

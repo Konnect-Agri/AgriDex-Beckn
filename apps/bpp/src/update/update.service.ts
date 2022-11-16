@@ -1,6 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { requestForwarder } from 'apps/bap/src/utils';
+import { requestForwarder } from 'utils/utils';
 import { lastValueFrom, map } from 'rxjs';
 
 @Injectable()
@@ -13,6 +13,7 @@ export class UpdateService {
       if (!body.context.bap_uri) {
         throw new Error('Invalid Context: bap_uri is missing');
       }
+
       const requestOptions = {
         headers: {
           'Content-Type': 'application/json',
@@ -26,9 +27,15 @@ export class UpdateService {
       );
 
       // sending back to BAP
+      const onUpdateResp = {
+        context: body.context,
+        message: {
+          order: updateResp,
+        },
+      };
       return requestForwarder(
         body.context.bap_uri + '/on-update',
-        updateResp,
+        onUpdateResp,
         this.httpService,
       );
     } catch (err) {

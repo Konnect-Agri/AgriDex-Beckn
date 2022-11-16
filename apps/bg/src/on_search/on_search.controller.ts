@@ -21,9 +21,6 @@ export class OnSearchController {
     res.json(ack).status(200);
 
     // forward the request
-    return this.onSearchService.handleOnSearch(
-      onSearchDto,
-      req.headers['host'],
-    );
+    return this.onSearchService.handleOnSearch(onSearchDto);
   }
 }

@@ -1,6 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { requestForwarder } from 'apps/bap/src/utils';
+import { requestForwarder } from 'utils/utils';
 
 @Injectable()
 export class InitService {
