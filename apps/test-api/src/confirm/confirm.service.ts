@@ -17,21 +17,38 @@ export class ConfirmService {
     // const confirmedOrder = await this.updateService.handleUpdate(body);
     // console.log('confirmedOrder: ', confirmedOrder);
     // code to make DB call to update the tracking here
-    const createTrackingGQL = `mutation insertTracking {
-      insert_order_tracking_details_one (object: {
-        order_id: ${body.message.order.id},
-        review: "",
-        status: "pending for processing",
-        url: "${host}/track/${body.message.order.id}"
-      }) {
+
+    // const createTrackingGQL = `mutation insertTracking {
+    //   insert_order_tracking_details_one (object: {
+    //     order_id: ${body.message.order.id},
+    //     review: "",
+    //     status: "pending for processing",
+    //     url: "${host}/track/${body.message.order.id}"
+    //   }) {
+    //     order_id
+    //   }
+    // }`;
+
+    const createTrackingGQL = `mutation insertLoanApplication ($application: order_tracking_details_insert_input!){
+      insert_order_tracking_details_one (object: $application) {
         order_id
+        review
+        status
+        url
       }
     }`;
 
     // console.log('body.message.order: ', JSON.parse(body.message.order));
 
-    const createOrderGQL = `mutation insertLoanApplication {
-      insert_loan_applications_one(object: {order_id: "${body.message.order.id}", order_details: {${body.message.order}}}) {
+    // const createOrderGQL = `mutation insertLoanApplication {
+    //   insert_loan_applications_one(object: {order_id: "${body.message.order.id}", order_details: {${body.message.order}}}) {
+    //     order_id
+    //     order_details
+    //   }
+    // }`;
+
+    const createOrderGQL = `mutation insertLoanApplication ($application: loan_applications_insert_input!){
+      insert_loan_applications_one (object: $application) {
         order_id
         order_details
       }
@@ -50,7 +67,19 @@ export class ConfirmService {
     // calling hasura to save the order
     const confirmedOrder = await lastValueFrom(
       this.httpService
-        .post(process.env.HASURA_URI, { query: createOrderGQL }, requestOptions)
+        .post(
+          process.env.HASURA_URI,
+          {
+            query: createOrderGQL,
+            variables: {
+              application: {
+                order_id: body.message.order.id,
+                order_details: body.message.order,
+              },
+            },
+          },
+          requestOptions,
+        )
         .pipe(map((item) => item.data)),
     );
 
@@ -61,12 +90,22 @@ export class ConfirmService {
       this.httpService
         .post(
           process.env.HASURA_URI,
-          { query: createTrackingGQL },
+          {
+            query: createTrackingGQL,
+            variables: {
+              application: {
+                order_id: body.message.order.id,
+                review: '',
+                status: 'pending for processing',
+                url: `${host}/track/${body.message.order.id}`,
+              },
+            },
+          },
           requestOptions,
         )
         .pipe(map((item) => item.data)),
     );
     console.log('orderTracking: ', orderTracking);
-    // return confirmedOrder;
+    return confirmedOrder;
   }
 }
