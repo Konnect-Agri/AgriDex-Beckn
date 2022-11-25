@@ -7,7 +7,9 @@ export class UpdateService {
   constructor(private readonly httpService: HttpService) { }
 
   async handleUpdate(body: any) {
+    console.log('message.order: ', body.message);
     const order = body.message.order;
+    console.log('message.body.order in test-api: ', order);
     try {
       //     const gql = `mutation updateLoanApplication {
       //       update_loan_applications_by_pk (
@@ -21,7 +23,7 @@ export class UpdateService {
       //     `;
 
       const gql = `mutation updateLoanApplication($order_id: String, $changes: loan_applications_set_input) {
-        update_article(
+        update_loan_applications (
           where: {order_id: {_eq: $order_id}},
           _set: $changes
         ) {
@@ -32,6 +34,15 @@ export class UpdateService {
           }
         }
       }`;
+      // const gql = `mutation update_a_loan_application {
+      //   update_loan_applications_by_pk (
+      //     pk_columns: {order_id: "${order.id}" }
+      //     _set: { order_details: "${JSON.stringify(order)}" }
+      //   ) {
+      //     order_id
+      //     order_details
+      //   }
+      // }`;
 
       const requestOptions = {
         headers: {
@@ -46,7 +57,7 @@ export class UpdateService {
             process.env.HASURA_URI,
             {
               query: gql,
-              varibales: {
+              variables: {
                 order_id: order.id,
                 changes: {
                   order_details: order,
@@ -57,7 +68,10 @@ export class UpdateService {
           )
           .pipe(map((item) => item.data)),
       );
-      console.log('res in test api update: ', res);
+      console.log(
+        'res in test api update: ',
+        res.data.update_loan_applications.returning,
+      );
       return res.order_details;
     } catch (err) {
       console.log('err: ', err);

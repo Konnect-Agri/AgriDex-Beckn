@@ -22,7 +22,7 @@ export class UpdateService {
       // forward to bank server
       const updateResp = await lastValueFrom(
         this.httpService
-          .post(process.env.BANK_UPDATE_URL, body, requestOptions)
+          .post(process.env.TEST_API_URI + '/update', body, requestOptions)
           .pipe(map((item) => item.data)),
       );
 

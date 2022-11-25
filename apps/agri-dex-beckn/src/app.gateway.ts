@@ -178,7 +178,7 @@ export class AppGateway {
     try {
       const transaction_id = Date.now() + client.id;
       client.join(transaction_id);
-      return this.updateService.handleUpdateEvent(client.id, updateQuery);
+      return this.updateService.handleUpdateEvent(updateQuery, transaction_id);
     } catch (err) {
       client.emit('error: ', err);
       client._error(err);

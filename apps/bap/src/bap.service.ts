@@ -68,6 +68,17 @@ export class BapService {
           body,
           this.httpService,
         );
+      case 'update':
+        console.log('body in update bpp: ', body);
+        if (!body.context.bpp_uri) {
+          throw new Error('Invalid Context: bpp_uri is missing');
+        }
+
+        return await requestForwarder(
+          body.context.bpp_uri + '/update',
+          body,
+          this.httpService,
+        );
       default:
         throw new Error('Invalid action');
     }

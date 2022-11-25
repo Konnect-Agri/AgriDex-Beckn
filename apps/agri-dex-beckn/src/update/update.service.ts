@@ -1,6 +1,8 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { contextGenerator } from 'utils/generators';
+import { lastValueFrom } from 'rxjs';
+import { contextGenerator, generateOrder } from 'utils/generators';
+import { requestForwarder } from 'utils/utils';
 
 @Injectable()
 export class UpdateService {
@@ -14,14 +16,34 @@ export class UpdateService {
         'update',
         process.env.BAP_URI,
         process.env.BAP_ID,
+        process.env.BPP_URI,
+        process.env.BPP_ID,
+      );
+
+      console.log(
+        'generated order: ',
+        generateOrder('update', body.updates, body.order),
       );
 
       const message = {
         message: {
-          update_target: body.update_targets,
-          order: {},
+          update_target: body.updates,
+          order: generateOrder('update', body.updates, body.order),
         },
       };
+
+      const payload = {
+        context: requestContext,
+        message: message.message,
+      };
+      console.log('payload in update event handler: ', payload.message);
+      const ack = await requestForwarder(
+        process.env.BAP_URI,
+        payload,
+        this.httpService,
+      );
+
+      // console.log('ack: ', ack);
     } catch (err) {
       console.log('error in handle update event: ', err);
     }
