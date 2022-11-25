@@ -6,55 +6,52 @@ import { lastValueFrom, map } from 'rxjs';
 export class TrackService {
   constructor(private readonly httpService: HttpService) { }
 
-  async handleTracking(order_id: string) {
-    console.log('order_id: ', order_id);
+  async getAllTrackings() {
+    try {
+      const gql = `
+      query MyQuery {
+        order_tracking_details {
+          status
+          order_id
+          review
+          url
+        }
+      }`;
 
-    let trackingInfo: any = {
-      url: 'http://tracking.uri/static_sample',
-      status: 'pending processing',
-    };
+      console.log('gql in track: ', gql);
 
-    const gql = `{
-      order_tracking_details(where: {order_id: {_eq: ${order_id}}}) {
+      const requestOptions = {
+        headers: {
+          'Content-Type': 'application/json',
+          'x-hasura-admin-secret': process.env.SECRET,
+        },
+      };
+
+      const response = await lastValueFrom(
+        this.httpService
+          .post(process.env.HASURA_URI, { query: gql }, requestOptions)
+          .pipe(map((item) => item.data)),
+      );
+
+      return response;
+    } catch (err) {
+      console.log('Err in get all trackings: ', err);
+    }
+  }
+
+  async handleTrackingInfo(orderId: string) {
+    const gql = `
+    query MyQuery {
+      order_tracking_details( where: {
+        order_id: { _eq: "${orderId}" }
+      } ) {
         status
         url
       }
     }`;
 
-    const requestOptions = {
-      headers: {
-        'Content-Type': 'application/json',
-        'x-hasura-admin-secret': process.env.SECRET,
-      },
-    };
-    // make db call here
-    console.log('gql query: ', gql);
-    try {
-      trackingInfo = await lastValueFrom(
-        this.httpService
-          .post(process.env.HASURA_URI, { query: gql }, requestOptions)
-          .pipe(map((item) => item.data)),
-      );
-    } catch (error) {
-      console.log('error: ', error);
-      trackingInfo = {
-        error: {
-          type: 'ERROR',
-          code: 'ERR CODE',
-          message: 'problem in db call',
-        },
-      };
-    }
+    console.log('gql in track: ', gql);
 
-    return trackingInfo;
-  }
-
-  async handleTrackingInfo(orderId: string) {
-    const gql = `query MyQuery {
-      loan_applications(where: {order_id: {_eq: ${orderId}}}) {
-        order_details
-      }
-    }`;
     const requestOptions = {
       headers: {
         'Content-Type': 'application/json',
@@ -68,6 +65,9 @@ export class TrackService {
         .pipe(map((item) => item.data)),
     );
 
-    return appForm;
+    return {
+      status: appForm.data.order_tracking_details[0].status,
+      url: appForm.data.order_tracking_details[0].url,
+    };
   }
 }

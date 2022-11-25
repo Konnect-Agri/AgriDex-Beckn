@@ -10,6 +10,10 @@ async function bootstrap() {
   // app.useWebSocketAdapter(new WsAdapter(app) as any);
 
   app.useWebSocketAdapter(redisIoAdapter);
+  app.enableCors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  });
   await app.listen(3003);
 }
 bootstrap();

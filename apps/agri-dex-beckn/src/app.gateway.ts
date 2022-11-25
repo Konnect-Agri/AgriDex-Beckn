@@ -1,3 +1,4 @@
+import { HttpService } from '@nestjs/axios';
 import { InternalServerErrorException } from '@nestjs/common';
 import {
   ConnectedSocket,
@@ -6,12 +7,15 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
+import { lastValueFrom, map } from 'rxjs';
 import { Server, Socket } from 'socket.io';
 import { ConfirmService } from './confirm/confirm.service';
 import { InitService } from './init/init.service';
 import { SearchQuery } from './search/interfaces/search-query.interface';
 import { SearchService } from './search/search.service';
 import { SelectService } from './select/select.service';
+import { TrackService } from './track/track.service';
+import { UpdateService } from './update/update.service';
 
 @WebSocketGateway({
   cors: {
@@ -25,6 +29,9 @@ export class AppGateway {
     private readonly selectService: SelectService,
     private readonly initService: InitService,
     private readonly confirmService: ConfirmService,
+    private readonly trackService: TrackService,
+    private readonly updateService: UpdateService,
+    private readonly httpService: HttpService,
   ) { }
 
   @WebSocketServer() server: Server;
@@ -38,7 +45,48 @@ export class AppGateway {
   @SubscribeMessage('response')
   async handleResponse(@MessageBody() response: any) {
     console.log('response methiod');
+    console.log('action: ', response.context.action);
     const transaction_id = response.context.transaction_id;
+    if (response.context.action === 'confirm') {
+      console.log('in if!');
+      const gql = `mutation insertClientOrderMapping ($application: order_client_mappings_insert_input!){
+        insert_order_client_mappings_one (object: $application) {
+          order_id
+          client_id
+        }
+      }`;
+
+      try {
+        console.log('response: ', response.message.order.loan_application_doc);
+        const res = await lastValueFrom(
+          this.httpService
+            .post(
+              process.env.HASURA_URI,
+              {
+                query: gql,
+                variables: {
+                  application: {
+                    order_id: response.message.order.id,
+                    client_id:
+                      response.message.order.loan_application_doc
+                        .applicant_details.basic_details.aadhar_number,
+                  },
+                },
+              },
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                  'x-hasura-admin-secret': process.env.SECRET,
+                },
+              },
+            )
+            .pipe(map((item) => item.data)),
+        );
+        console.log('res: ', res);
+      } catch (err) {
+        console.log('err while creating client order mapping: ', err);
+      }
+    }
     this.server.to(transaction_id).emit('response', response);
     this.server.in(transaction_id).socketsLeave(transaction_id);
   }
@@ -99,6 +147,38 @@ export class AppGateway {
     try {
       client.join(confirmQuery.context.transaction_id);
       return this.confirmService.handleConfirmEvent(client.id, confirmQuery);
+    } catch (err) {
+      client.emit('error: ', err);
+      client._error(err);
+    }
+  }
+
+  @SubscribeMessage('track')
+  async handleTrack(
+    @MessageBody() trackQuery: any,
+    @ConnectedSocket() client: Socket,
+  ) {
+    console.log('track query: ', trackQuery);
+    try {
+      const transactionId = Date.now() + client.id;
+      client.join(transactionId);
+      return this.trackService.handleTrackEvent(trackQuery, transactionId);
+    } catch (err) {
+      client.emit('error: ', err);
+      client._error(err);
+    }
+  }
+
+  @SubscribeMessage('update')
+  async handleUpdate(
+    @MessageBody() updateQuery: any,
+    @ConnectedSocket() client: Socket,
+  ) {
+    console.log('update query: ', updateQuery);
+    try {
+      const transaction_id = Date.now() + client.id;
+      client.join(transaction_id);
+      return this.updateService.handleUpdateEvent(client.id, updateQuery);
     } catch (err) {
       client.emit('error: ', err);
       client._error(err);

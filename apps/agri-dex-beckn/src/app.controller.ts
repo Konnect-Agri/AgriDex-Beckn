@@ -14,6 +14,12 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
+
+  @Post('orders')
+  getUserOrders(@Body() body: any) {
+    return this.appService.getUserOrders(body);
+  }
+
   @Post()
   async handleResponse(
     @Req() req: Request,

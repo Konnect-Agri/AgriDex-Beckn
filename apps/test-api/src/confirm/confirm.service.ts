@@ -18,17 +18,6 @@ export class ConfirmService {
     // console.log('confirmedOrder: ', confirmedOrder);
     // code to make DB call to update the tracking here
 
-    // const createTrackingGQL = `mutation insertTracking {
-    //   insert_order_tracking_details_one (object: {
-    //     order_id: ${body.message.order.id},
-    //     review: "",
-    //     status: "pending for processing",
-    //     url: "${host}/track/${body.message.order.id}"
-    //   }) {
-    //     order_id
-    //   }
-    // }`;
-
     const createTrackingGQL = `mutation insertLoanApplication ($application: order_tracking_details_insert_input!){
       insert_order_tracking_details_one (object: $application) {
         order_id
@@ -97,7 +86,7 @@ export class ConfirmService {
                 order_id: body.message.order.id,
                 review: '',
                 status: 'pending for processing',
-                url: `${host}/track/${body.message.order.id}`,
+                url: `http://${host}/applications/${body.message.order.id}`,
               },
             },
           },

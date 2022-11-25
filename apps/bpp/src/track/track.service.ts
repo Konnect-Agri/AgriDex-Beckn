@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { Body, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { requestForwarder } from 'utils/utils';
 import { lastValueFrom, map } from 'rxjs';
 
@@ -8,20 +8,25 @@ export class TrackService {
   constructor(private readonly httpService: HttpService) { }
 
   async handleTrackRequest(body: any) {
-    console.log('in BPP track');
+    console.log('in BPP track: ', body);
 
     // call the Bank server to get the response
-    const trackingInfo = await lastValueFrom(
-      this.httpService
-        .post(process.env.BANK_TRACK_URL, body.message)
-        .pipe(map((item) => item.data)),
-    );
+    try {
+      const trackingInfo = await lastValueFrom(
+        this.httpService
+          .get(process.env.TEST_API_URI + '/track/' + body.message.order_id)
+          .pipe(map((item) => item.data)),
+      );
 
-    // forward this tracking info to BAP
-    return await requestForwarder(
-      body.context.bap_uri + '/on-track',
-      trackingInfo,
-      this.httpService,
-    );
+      // forward this tracking info to BAP
+      return await requestForwarder(
+        body.context.bap_uri + '/on-track',
+        { context: body.context, message: trackingInfo },
+        this.httpService,
+      );
+    } catch (err) {
+      console.log('err in bpp track: ', err);
+      throw new InternalServerErrorException();
+    }
   }
 }

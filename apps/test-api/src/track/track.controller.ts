@@ -4,9 +4,10 @@ import { TrackService } from './track.service';
 @Controller('track')
 export class TrackController {
   constructor(private readonly trackService: TrackService) { }
-  @Post()
-  handleTrack(@Body() body: any) {
-    return this.trackService.handleTracking(body.message.order_id);
+
+  @Get()
+  getAllTrackings() {
+    return this.trackService.getAllTrackings();
   }
 
   @Get(':order_id')

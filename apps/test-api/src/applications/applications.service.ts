@@ -6,26 +6,47 @@ import { lastValueFrom, map } from 'rxjs';
 export class ApplicationsService {
   constructor(private readonly httpService: HttpService) { }
 
-  async handleReview(body: any, host: string, order_id: string) {
-    const { review, status } = body;
-    // code to make DB call to update the tracking here
+  async getApplicationForm(orderId: string) {
+    try {
+      const gql = `query GetApplication {
+        loan_applications(where: {order_id: {_eq: "${orderId}"}}) {
+          order_details
+          order_id
+        },
+        order_tracking_details( where: {
+          order_id: { _eq: "${orderId}" }
+        } ) {
+          order_id
+          status
+          review
+          update_targets
+          url
+        }
+      }`;
 
-    // const createTrackingGQL = `mutation updateApplicationTracking {
-    //   update_order_tracking_details_by_pk (
-    //     pk_columns: {order_id: ${order_id}}
-    //     _set: {
-    //       review: ${review},
-    //       url: ${host}/track/${order_id},
-    //       status: ${status}
-    //     }
-    //   ) {
-    //     order_id
-    //     review
-    //     status
-    //     url
-    //   }
-    // }
-    // `;
+      const requestOptions = {
+        headers: {
+          'Content-Type': 'application/json',
+          'x-hasura-admin-secret': process.env.SECRET,
+        },
+      };
+
+      const response = await lastValueFrom(
+        this.httpService
+          .post(process.env.HASURA_URI, { query: gql }, requestOptions)
+          .pipe(map((item) => item.data)),
+      );
+
+      return response;
+    } catch (err) {
+      console.log('Err in get one application form by order id: ', err);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async handleReview(body: any, host: string, order_id: string) {
+    const { review, status, update_targets } = body;
+    // code to make DB call to update the tracking here
 
     const createTrackingGQL = `mutation updateApplicationTracking($order_id: String, $changes: order_tracking_details_set_input) {
       update_order_tracking_details(
@@ -38,6 +59,7 @@ export class ApplicationsService {
           review
           status
           url
+          update_targets  
         }
       }
     }`;
@@ -60,8 +82,9 @@ export class ApplicationsService {
                 order_id: order_id,
                 changes: {
                   review: review,
-                  url: `${host}/track/${order_id}`,
+                  url: `http://${host}/applications/${order_id}`,
                   status: `${status}`,
+                  update_targets: update_targets.toString(),
                 },
               },
             },

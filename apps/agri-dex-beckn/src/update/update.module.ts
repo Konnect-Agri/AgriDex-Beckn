@@ -1,7 +1,9 @@
+import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { UpdateService } from './update.service';
 
 @Module({
-  providers: [UpdateService]
+  imports: [HttpModule],
+  providers: [UpdateService],
 })
-export class UpdateModule {}
+export class UpdateModule { }

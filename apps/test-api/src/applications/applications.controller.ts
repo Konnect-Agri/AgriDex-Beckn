@@ -10,6 +10,11 @@ export class ApplicationsController {
     return this.applicationsService.getAllApplications();
   }
 
+  @Get(':id')
+  getApplicationForm(@Param('id') order_id: string) {
+    return this.applicationsService.getApplicationForm(order_id);
+  }
+
   @Post('review/:id')
   handleReview(
     @Param('id') order_id: string,
