@@ -1,7 +1,7 @@
 node() {
     properties([
         parameters([
-            string(name: 'docker_repo', defaultValue: 'agridex-beckn', description: 'agridex-beckn'),
+            // string(name: 'docker_repo', defaultValue: 'agridex-beckn', description: 'agridex-beckn'),
             string(name: 'docker_server', defaultValue: 'localhost:5000', description: 'Docker Registry URL'),
 
         ])
@@ -14,16 +14,44 @@ node() {
             echo "${env.commit_id}"
     }
 
-    stage('docker-build') {
+    stage('docker-build-agridex-proxy') {
             sh '''
                 # docker build -f <location-of-docker-file> -t <tag-of-docker-image> <context-for-docker-image>
-                docker build -f Dockerfile -t $docker_server/$docker_repo:$commit_id .
+                docker build -f apps/agri-dex-beckn/Dockerfile -t $docker_server/agridex-beckn-proxy:$commit_id .
+                '''
+    }
+    stage('docker-build-agridex-bap') {
+            sh '''
+                # docker build -f <location-of-docker-file> -t <tag-of-docker-image> <context-for-docker-image>
+                docker build -f apps/bap/Dockerfile -t $docker_server/agridex-beckn-bap:$commit_id .
+                '''
+    }
+    stage('docker-build-agridex-bg') {
+            sh '''
+                # docker build -f <location-of-docker-file> -t <tag-of-docker-image> <context-for-docker-image>
+                docker build -f apps/bg/Dockerfile -t $docker_server/agridex-beckn-bg:$commit_id .
+                '''
+    }
+    stage('docker-build-agridex-bpp') {
+            sh '''
+                # docker build -f <location-of-docker-file> -t <tag-of-docker-image> <context-for-docker-image>
+                docker build -f apps/bpp/Dockerfile -t $docker_server/agridex-beckn-bpp:$commit_id .
+                '''
+    }
+    stage('docker-build-agridex-test-api') {
+            sh '''
+                # docker build -f <location-of-docker-file> -t <tag-of-docker-image> <context-for-docker-image>
+                docker build -f apps/test-api/Dockerfile -t $docker_server/agridex-beckn-test-api:$commit_id .
                 '''
     }
 
     stage('docker-push') {
         sh '''
-                docker push $docker_server/$docker_repo:$commit_id
+                docker push $docker_server/agridex-beckn-proxy:$commit_id
+                docker push $docker_server/agridex-beckn-bap:$commit_id
+                docker push $docker_server/agridex-beckn-bg:$commit_id
+                docker push $docker_server/agridex-beckn-bpp:$commit_id
+                docker push $docker_server/agridex-beckn-test-api:$commit_id
                 '''
     }
     stage('ArchiveArtifacts') {
