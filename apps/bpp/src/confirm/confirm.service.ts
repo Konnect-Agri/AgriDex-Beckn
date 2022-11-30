@@ -14,11 +14,7 @@ export class ConfirmService {
         throw new Error('Invalid Context: bap_uri is missing');
       }
 
-      // TODO: contact the provider to register payment details
-      console.log(
-        'process.env.BANK_CONFIRM_URL: ',
-        process.env.BANK_CONFIRM_URL,
-      );
+      // forwarding the request to provider
       const resp = await lastValueFrom(
         this.httpService
           .post(process.env.TEST_API_URI + '/confirm', confirmDto, {

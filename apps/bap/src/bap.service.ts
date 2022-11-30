@@ -15,9 +15,6 @@ export class BapService {
     // TODO: add a request validator
     switch (action) {
       case 'search':
-        // forward to BG
-        // body.context.bap_id = '101';
-        // body.context.bap_uri = `http://${host}`;
         console.log('context in BAP search: ', body.context);
         return await requestForwarder(
           process.env.BG_URI + '/search',

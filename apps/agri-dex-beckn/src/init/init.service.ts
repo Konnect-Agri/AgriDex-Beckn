@@ -19,7 +19,6 @@ export class InitService {
       this.httpService,
     );
 
-    console.log('ack in init service of proxy: ', ack);
     return ack;
   }
 }

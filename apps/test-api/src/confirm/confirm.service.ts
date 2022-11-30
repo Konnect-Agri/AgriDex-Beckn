@@ -36,12 +36,18 @@ export class ConfirmService {
     //   }
     // }`;
 
-    const createOrderGQL = `mutation insertLoanApplication ($application: loan_applications_insert_input!){
-      insert_loan_applications_one (object: $application) {
-        order_id
-        order_details
-      }
-    }`;
+    const createOrderGQL = `mutation updateLoanApplication($order_id: String, $changes: loan_applications_set_input) {
+        update_loan_applications (
+          where: {order_id: {_eq: $order_id}},
+          _set: $changes
+        ) {
+          affected_rows
+          returning {
+            order_id
+            order_details
+          }
+        }
+      }`;
 
     console.log('createOrderGQL: ', createOrderGQL);
 
@@ -61,8 +67,8 @@ export class ConfirmService {
           {
             query: createOrderGQL,
             variables: {
-              application: {
-                order_id: body.message.order.id,
+              order_id: body.message.order.id,
+              changes: {
                 order_details: body.message.order,
               },
             },

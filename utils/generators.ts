@@ -162,31 +162,39 @@ export const generateOrder = (
         order.loan_application_doc.applicant_details.basic_details.gender = val;
         break;
       case 'marital_status':
-        order.loan_application_doc.applicant_details.basic_details.tags.marital_status = val;
+        order.loan_application_doc.applicant_details.basic_details.tags.marital_status =
+          val;
         break;
       case 'age':
         order.loan_application_doc.applicant_details.basic_details.dob = val;
         break;
       case 'fathers_name':
-        order.loan_application_doc.applicant_details.basic_details.tags.fathers_name = val;
+        order.loan_application_doc.applicant_details.basic_details.tags.fathers_name =
+          val;
         break;
       case 'mothers_name':
-        order.loan_application_doc.applicant_details.basic_details.tags.mothers_name = val;
+        order.loan_application_doc.applicant_details.basic_details.tags.mothers_name =
+          val;
         break;
       case 'educational_qualitfication':
-        order.loan_application_doc.applicant_details.basic_details.educatioal_qualification = val;
+        order.loan_application_doc.applicant_details.basic_details.educatioal_qualification =
+          val;
         break;
       case 'PAN_Number':
-        order.loan_application_doc.applicant_details.basic_details.pan_card_number = val;
+        order.loan_application_doc.applicant_details.basic_details.pan_card_number =
+          val;
         break;
       case 'Aadhar_Number':
-        order.loan_application_doc.applicant_details.basic_details.aadhar_number = val;
+        order.loan_application_doc.applicant_details.basic_details.aadhar_number =
+          val;
         break;
       case 'Address':
-        order.loan_application_doc.applicant_details.temporary_correspondence_details.address = val;
+        order.loan_application_doc.applicant_details.temporary_correspondence_details.address =
+          val;
         break;
       case 'Pin_Code':
-        order.loan_application_doc.applicant_details.temporary_correspondence_details.address = val;
+        order.loan_application_doc.applicant_details.temporary_correspondence_details.address =
+          val;
         break;
       case 'Phone_number':
         order.loan_application_doc.applicant_details.temporary_correspondence_details.contact.phone =
@@ -197,10 +205,12 @@ export const generateOrder = (
           val;
         break;
       case 'Permanent_Address':
-        order.loan_application_doc.applicant_details.permanent_correspondence_details.address = val;
+        order.loan_application_doc.applicant_details.permanent_correspondence_details.address =
+          val;
         break;
       case 'Permanent_Pin_Code':
-        order.loan_application_doc.applicant_details.permanent_correspondence_details.address = val;
+        order.loan_application_doc.applicant_details.permanent_correspondence_details.address =
+          val;
         break;
       case 'Permanent_Phone_number':
         order.loan_application_doc.applicant_details.permanent_correspondence_details.contact.phone =
@@ -211,34 +221,44 @@ export const generateOrder = (
           val;
         break;
       case 'Agricultural_Income_Source':
-        order.loan_application_doc.applicant_details.income_details.agricultural_income_source = val;
+        order.loan_application_doc.applicant_details.income_details.agricultural_income_source =
+          val;
         break;
       case 'Agricultural_Income':
-        order.loan_application_doc.applicant_details.income_details.agricultural_income = val;
+        order.loan_application_doc.applicant_details.income_details.agricultural_income =
+          val;
         break;
       case 'Other_Income_Source':
-        order.loan_application_doc.applicant_details.income_details.other_income_source = val;
+        order.loan_application_doc.applicant_details.income_details.other_income_source =
+          val;
         break;
       case 'Other_Income':
-        order.loan_application_doc.applicant_details.income_details.other_income = val;
+        order.loan_application_doc.applicant_details.income_details.other_income =
+          val;
         break;
       case 'Total_Income':
-        order.loan_application_doc.applicant_details.income_details.total_income = val;
+        order.loan_application_doc.applicant_details.income_details.total_income =
+          val;
         break;
       case 'Guarantor_Name':
-        order.loan_application_doc.applicant_details.guarantor_details.name = val;
+        order.loan_application_doc.applicant_details.guarantor_details.name =
+          val;
         break;
       case 'Guarantor_Relationship':
-        order.loan_application_doc.applicant_details.guarantor_details.relationship = val;
+        order.loan_application_doc.applicant_details.guarantor_details.relationship =
+          val;
         break;
       case 'Guarantor_Mobile':
-        order.loan_application_doc.applicant_details.guarantor_details.mobile = val;
+        order.loan_application_doc.applicant_details.guarantor_details.mobile =
+          val;
         break;
       case 'Guarantor_Email':
-        order.loan_application_doc.applicant_details.guarantor_details.email = val;
+        order.loan_application_doc.applicant_details.guarantor_details.email =
+          val;
         break;
       case 'Guarantor_PAN_Number':
-        order.loan_application_doc.applicant_details.guarantor_details.pan_card_number = val;
+        order.loan_application_doc.applicant_details.guarantor_details.pan_card_number =
+          val;
         break;
       default:
         break;
@@ -246,4 +266,82 @@ export const generateOrder = (
   });
 
   return order;
+};
+
+type FULFILMENT_PERSON = {
+  id: string;
+  type: string;
+  provider_id: string;
+  tracking: boolean;
+  agent: {
+    name: string;
+    gender: string;
+    phone: number;
+    email: string;
+  };
+};
+
+type SELECT_MESSAGE = {
+  order_id: string;
+  provider: {
+    id: string;
+    name: string;
+  };
+  item: {
+    id: string;
+    name: string;
+    price: string;
+    tags: {
+      block: string;
+      district: string;
+      loan_tenure: string;
+      interest_rate: string;
+      processing_charges: string;
+    };
+  };
+  fulfillment: ReadonlyArray<FULFILMENT_PERSON>;
+};
+
+export const generateSelectMessage = (_details: SELECT_MESSAGE) => {
+  return {
+    order: {
+      id: _details.order_id,
+      provider: {
+        id: _details.provider.id,
+        descriptor: {
+          name: _details.provider.name,
+        },
+        items: [
+          {
+            id: _details.item.id,
+            descriptor: {
+              name: _details.item.name,
+            },
+            price: _details.item.price,
+            provider: {
+              id: _details.provider.id,
+            },
+            tags: {
+              block: _details.item.tags.block,
+              district: _details.item.tags.district,
+              loan_tenure: _details.item.tags.loan_tenure,
+              interest_rate: _details.item.tags.interest_rate,
+              processing_charges: _details.item.tags.processing_charges,
+            },
+          },
+        ],
+        fulfillments: _details.fulfillment.map((person: FULFILMENT_PERSON) => {
+          return {
+            id: person.id,
+            type: person.type,
+            provider_id: person.provider_id,
+            tracking: person.tracking,
+            agent: {
+              name: person.agent.name,
+            },
+          };
+        }),
+      },
+    },
+  };
 };

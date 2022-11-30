@@ -1,5 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { lastValueFrom, map } from 'rxjs';
 import { requestForwarder } from 'utils/utils';
 
 @Injectable()
@@ -15,6 +16,15 @@ export class InitService {
 
       // TODO: contact provider to register shipping details
       // and populate the fullfilment object
+      console.log('in init service of bpp!');
+
+      const resp = await lastValueFrom(
+        this.httpService
+          .post(process.env.TEST_API_URI + '/init', initDto, {
+            headers: { 'Content-Type': 'application/json' },
+          })
+          .pipe(map((item) => item.data)),
+      );
 
       await requestForwarder(
         initDto.context.bap_uri + '/on-init',
