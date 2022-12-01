@@ -16,6 +16,8 @@ export class SelectService {
 
     console.log('select query in proxy select service: ', selectQuery);
     const newMessageId = Date.now() + clientId;
+    selectQuery.context.bap_uri = process.env.BAP_URI;
+    selectQuery.context.bap_id = process.env.BAP_ID;
     selectQuery.context.message_id = newMessageId.toString();
     selectQuery.context.timestamp = Date.now();
     selectQuery.message.order.updated_at = Date.now();

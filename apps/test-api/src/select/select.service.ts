@@ -87,6 +87,106 @@ export class SelectService {
         }
       }`;
 
+      // getting data from Query resolver
+
+      const preFillingData = await lastValueFrom(
+        this.httpService
+          .post(
+            process.env.AUTHENTICATION_URI,
+            {
+              consentArtifact: {
+                created: 'YYYY-MM-DDThh:mm:ssZn.n',
+                expires: 'YYYY-MM-DDThh:mm:ssZn.n',
+                id: '',
+                revocable: false,
+                collector: {
+                  id: '',
+                  url: 'https://sample-collector/api/v1/collect',
+                },
+                consumer: {
+                  id: '',
+                  url: 'https://sample-consumer/api/v1/consume',
+                },
+                provider: {
+                  id: '',
+                  url: 'https://sample-consumer/api/v1',
+                },
+                user: {
+                  type: 'AADHAAR|MOBILE|PAN|PASSPORT|...',
+                  name: '',
+                  issuer: '',
+                  dpID: '',
+                  cmID: '',
+                  dcID: '',
+                },
+                revoker: {
+                  url: 'https://sample-revoker/api/v1/revoke',
+                  name: '',
+                  id: '',
+                },
+                purpose: '',
+                user_sign: '',
+                collector_sign: '',
+                log: {
+                  consent_use: {
+                    url: 'https://sample-log/api/v1/log',
+                  },
+                  data_access: {
+                    url: 'https://sample-log/api/v1/log',
+                  },
+                },
+                // data: 'query MyQuery {\n  attendance {\n    id\n    date\n  }\n}',
+                data: 'query MyQuery {\n  query_resolver_table {\n    int_day\n    int_gender\n    int_marital_status\n    int_month\n    int_primary_mobile_number\n    int_year\n    vch_aadharno\n    vch_address\n    vch_farmer_name\n    vch_father_name\n    vch_village\n    vch_district\n  }\n}\n',
+              },
+              gql: 'query MyQuery {\n  query_resolver_table {\n    int_day\n    int_gender\n    int_marital_status\n    int_month\n    int_primary_mobile_number\n    int_year\n    vch_aadharno\n    vch_address\n    vch_farmer_name\n    vch_father_name\n    vch_village\n    vch_district\n  }\n}\n',
+            },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${process.env.AUTH_JWT}`,
+              },
+            },
+          )
+          .pipe(map((item) => item.data)),
+      );
+      console.log('prefilled data: ', preFillingData);
+      const dataToMap = preFillingData.query_resolver_table[0];
+      response.message.order['loan_application_doc'] = {
+        applicant_details: {
+          basic_details: {
+            dob:
+              dataToMap.int_day +
+              '-' +
+              dataToMap.int_month_ +
+              '-' +
+              dataToMap.int_year,
+            name: dataToMap.vch_farmer_name,
+            tags: {
+              fathers_name: dataToMap.vch_father_name,
+              marital_status:
+                dataToMap.int_marital_status === '1' ? 'Single' : 'Married',
+            },
+            gender: dataToMap.int_gender === '1' ? 'F' : 'M',
+            aadhar_number: dataToMap.vch_aadharno,
+          },
+          permanent_correspondence_details: {
+            address: dataToMap.vch_address,
+            contact: {
+              phone: dataToMap.int_primary_mobile_number,
+            },
+          },
+          temporary_correspondence_details: {
+            address: dataToMap.vch_address,
+            contact: {
+              phone: dataToMap.int_primary_mobile_number,
+            },
+          },
+        },
+        application_basic_info: {
+          district: dataToMap.vch_district,
+        },
+      };
+
       const confirmedOrder = await lastValueFrom(
         this.httpService
           .post(
@@ -96,7 +196,7 @@ export class SelectService {
               variables: {
                 application: {
                   order_id: body.message.order.id,
-                  order_details: body.message.order,
+                  order_details: response.message.order,
                 },
               },
             },
