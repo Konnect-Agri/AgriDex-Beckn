@@ -16,6 +16,7 @@ import { UpdateModule } from './update/update.module';
 import { TrackModule } from './track/track.module';
 import { TrackService } from './track/track.service';
 import { UpdateService } from './update/update.service';
+import { SwaggerModule } from '@nestjs/swagger';
 
 @Module({
   imports: [
