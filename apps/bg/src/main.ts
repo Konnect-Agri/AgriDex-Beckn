@@ -3,6 +3,6 @@ import { BgModule } from './bg.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(BgModule);
-  await app.listen(3001);
+  await app.listen(process.env.BG_PORT || 3001);
 }
 bootstrap();

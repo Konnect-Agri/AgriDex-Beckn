@@ -7,6 +7,6 @@ async function bootstrap() {
     origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   });
-  await app.listen(3004);
+  await app.listen(process.env.TEST_API || 3004);
 }
 bootstrap();

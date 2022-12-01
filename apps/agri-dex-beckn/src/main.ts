@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { RedisIoAdapter } from './adapters/redis-socketio.adapter';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,6 +15,17 @@ async function bootstrap() {
     origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   });
-  await app.listen(3003);
+
+  const config = new DocumentBuilder()
+    .setTitle('AgriDex-Beckn-Client-Proxy')
+    .setDescription('API for the client proxy service of agridex-beckn APIs')
+    .setVersion('0.0')
+    .addTag('agridex-beckn-proxy')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api  ', app, document);
+
+  await app.listen(process.env.AGRI_DEX_BECKN_PORT || 3003);
 }
 bootstrap();

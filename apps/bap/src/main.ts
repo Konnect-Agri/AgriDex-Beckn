@@ -7,6 +7,6 @@ async function bootstrap() {
     origin: 'http://localhost:5173',
     methods: 'POST',
   });
-  await app.listen(3000);
+  await app.listen(process.env.BAP_PORT || 3000);
 }
 bootstrap();
