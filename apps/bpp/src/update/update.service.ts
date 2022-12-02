@@ -25,14 +25,15 @@ export class UpdateService {
           .post(process.env.TEST_API_URI + '/update', body, requestOptions)
           .pipe(map((item) => item.data)),
       );
-
+      console.log('update resp in BPP: ', updateResp);
       // sending back to BAP
       const onUpdateResp = {
         context: body.context,
         message: {
-          order: updateResp,
+          order: updateResp[0].order_details,
         },
       };
+      console.log('onUpdateResp: ', onUpdateResp);
       return requestForwarder(
         body.context.bap_uri + '/on-update',
         onUpdateResp,

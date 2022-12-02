@@ -55,6 +55,16 @@ export class AppGateway {
           client_id
         }
       }`;
+      const aadhar_email_maps = {
+        '331081000000': 'farmer-1',
+        '334130000000': 'farmer-2',
+        '756744000000': 'farmer-3',
+        '634896000000': 'farmer-4',
+        '860668000000': 'farmer-5',
+        '727414000000': 'farmer-6',
+        '512968000000': 'farmer-7',
+        '519193000000': 'farmer-8',
+      };
 
       try {
         console.log('response: ', response.message.order.loan_application_doc);
@@ -68,8 +78,10 @@ export class AppGateway {
                   application: {
                     order_id: response.message.order.id,
                     client_id:
+                      aadhar_email_maps[
                       response.message.order.loan_application_doc
-                        .applicant_details.basic_details.aadhar_number,
+                        .applicant_details.basic_details.aadhar_number
+                      ],
                   },
                 },
               },
@@ -87,7 +99,12 @@ export class AppGateway {
         console.log('err while creating client order mapping: ', err);
       }
     }
-    this.server.to(transaction_id).emit('response', response);
+    this.server.to(transaction_id).emit('response', {
+      context: {
+        action: 'update',
+      },
+      message: 'Update Recorded',
+    });
     this.server.in(transaction_id).socketsLeave(transaction_id);
   }
 

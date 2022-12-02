@@ -51,7 +51,7 @@ export class UpdateService {
         },
       };
 
-      const res = await lastValueFrom(
+      let res = await lastValueFrom(
         this.httpService
           .post(
             process.env.HASURA_URI,
@@ -72,7 +72,8 @@ export class UpdateService {
         'res in test api update: ',
         res.data.update_loan_applications.returning,
       );
-      return res.order_details;
+      res = res.data.update_loan_applications.returning;
+      return res;
     } catch (err) {
       console.log('err: ', err);
       throw new InternalServerErrorException();
