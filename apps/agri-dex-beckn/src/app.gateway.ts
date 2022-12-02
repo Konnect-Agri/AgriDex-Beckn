@@ -98,13 +98,16 @@ export class AppGateway {
       } catch (err) {
         console.log('err while creating client order mapping: ', err);
       }
+    } else if (response.context.action === 'update') {
+      this.server.to(transaction_id).emit('response', {
+        context: {
+          action: 'update',
+        },
+        message: 'Update Recorded',
+      });
+      return;
     }
-    this.server.to(transaction_id).emit('response', {
-      context: {
-        action: 'update',
-      },
-      message: 'Update Recorded',
-    });
+    this.server.to(transaction_id).emit('response', response);
     this.server.in(transaction_id).socketsLeave(transaction_id);
   }
 
