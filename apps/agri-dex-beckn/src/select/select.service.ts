@@ -29,7 +29,7 @@ export class SelectService {
       this.httpService,
     );
 
-    console.log('ack: ', ack);
+    // console.log('ack: ', ack);
     return ack;
   }
 }

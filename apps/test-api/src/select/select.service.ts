@@ -98,24 +98,26 @@ export class SelectService {
         'farmer-8': 519193000000,
       };
 
-      // const authResp = await lastValueFrom(
-      //   this.httpService
-      //     .post(
-      //       'https://auth.konnect.samagra.io/api/login',
-      //       {
-      //         loginId: process.env.LOGIN_ID,
-      //         password: process.env.PASSWORD,
-      //         applicationId: process.env.APPLICATION_ID,
-      //       },
-      //       {
-      //         headers: {
-      //           'Content-Type': 'application/json',
-      //           'Authorization': process.env.AUTH_TOKEN_FOR_DC_LOGIN,
-      //         },
-      //       },
-      //     )
-      //     .pipe(map((item) => item.data)),
-      // );
+      const authResp = await lastValueFrom(
+        this.httpService
+          .post(
+            'https://auth.konnect.samagra.io/api/login',
+            {
+              loginId: process.env.LOGIN_ID,
+              password: process.env.PASSWORD,
+              applicationId: process.env.APPLICATION_ID,
+            },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: process.env.AUTH_TOKEN_FOR_DC_LOGIN,
+              },
+            },
+          )
+          .pipe(map((item) => item.data)),
+      );
+
+      console.log('auth resp: ', authResp);
 
       // getting data from Query resolver
       const preFillingData = await lastValueFrom(
@@ -191,7 +193,7 @@ export class SelectService {
             {
               headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${process.env.AUTH_JWT}`,
+                Authorization: `Bearer ${authResp.token}`,
               },
             },
           )
