@@ -92,7 +92,7 @@ export class ConfirmService {
                 order_id: body.message.order.id,
                 review: '',
                 status: 'pending for processing',
-                url: `http://${host}/applications/${body.message.order.id}`,
+                url: `https://api.bank.konnect.samagra.io/applications/${body.message.order.id}`,
               },
             },
           },
