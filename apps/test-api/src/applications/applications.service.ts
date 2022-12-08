@@ -82,7 +82,7 @@ export class ApplicationsService {
                 order_id: order_id,
                 changes: {
                   review: review,
-                  url: `http://${host}/applications/${order_id}`,
+                  url: `https://api.bank.konnect.samagra.io/applications/${order_id}`,
                   status: `${status}`,
                   update_targets: update_targets.toString(),
                 },
