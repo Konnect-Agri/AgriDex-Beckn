@@ -17,7 +17,7 @@ import { TrackModule } from './track/track.module';
 import { TrackService } from './track/track.service';
 import { UpdateService } from './update/update.service';
 import { SwaggerModule } from '@nestjs/swagger';
-
+import { TerminusModule } from '@nestjs/terminus';
 @Module({
   imports: [
     SearchModule,
@@ -28,6 +28,7 @@ import { SwaggerModule } from '@nestjs/swagger';
     HttpModule,
     UpdateModule,
     TrackModule,
+    TerminusModule,
   ],
   controllers: [AppController],
   providers: [
@@ -41,4 +42,4 @@ import { SwaggerModule } from '@nestjs/swagger';
     UpdateService,
   ],
 })
-export class AppModule { }
+export class AppModule {}
