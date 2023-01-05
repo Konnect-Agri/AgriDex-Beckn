@@ -6,7 +6,7 @@ import { SelectModule } from './select/select.module';
 import { InitModule } from './init/init.module';
 import { ConfirmService } from './confirm/confirm.service';
 import { ConfirmModule } from './confirm/confirm.module';
-import { HttpModule, HttpService } from '@nestjs/axios';
+import { HttpModule } from '@nestjs/axios';
 import { AppGateway } from './app.gateway';
 import { SearchService } from './search/search.service';
 import { InitService } from './init/init.service';
@@ -25,10 +25,10 @@ import { TerminusModule } from '@nestjs/terminus';
     SelectModule,
     InitModule,
     ConfirmModule,
-    HttpModule,
     UpdateModule,
     TrackModule,
     TerminusModule,
+    HttpModule,
   ],
   controllers: [AppController],
   providers: [

@@ -8,7 +8,8 @@ import { InitModule } from './init/init.module';
 import { ConfirmModule } from './confirm/confirm.module';
 import { UpdateModule } from './update/update.module';
 import { TrackModule } from './track/track.module';
-
+import { TerminusModule } from '@nestjs/terminus';
+import { HttpModule } from '@nestjs/axios';
 @Module({
   imports: [
     OnSearchModule,
@@ -20,8 +21,10 @@ import { TrackModule } from './track/track.module';
     ConfirmModule,
     UpdateModule,
     TrackModule,
+    TerminusModule,
+    HttpModule,
   ],
   controllers: [BppController],
   providers: [BppService],
 })
-export class BppModule { }
+export class BppModule {}
