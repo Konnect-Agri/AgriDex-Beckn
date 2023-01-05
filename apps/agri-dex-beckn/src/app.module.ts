@@ -6,7 +6,7 @@ import { SelectModule } from './select/select.module';
 import { InitModule } from './init/init.module';
 import { ConfirmService } from './confirm/confirm.service';
 import { ConfirmModule } from './confirm/confirm.module';
-import { HttpModule, HttpService } from '@nestjs/axios';
+import { HttpModule } from '@nestjs/axios';
 import { AppGateway } from './app.gateway';
 import { SearchService } from './search/search.service';
 import { InitService } from './init/init.service';
@@ -17,7 +17,7 @@ import { TrackModule } from './track/track.module';
 import { TrackService } from './track/track.service';
 import { UpdateService } from './update/update.service';
 import { SwaggerModule } from '@nestjs/swagger';
-
+import { TerminusModule } from '@nestjs/terminus';
 @Module({
   imports: [
     SearchModule,
@@ -25,9 +25,10 @@ import { SwaggerModule } from '@nestjs/swagger';
     SelectModule,
     InitModule,
     ConfirmModule,
-    HttpModule,
     UpdateModule,
     TrackModule,
+    TerminusModule,
+    HttpModule,
   ],
   controllers: [AppController],
   providers: [
@@ -41,4 +42,4 @@ import { SwaggerModule } from '@nestjs/swagger';
     UpdateService,
   ],
 })
-export class AppModule { }
+export class AppModule {}

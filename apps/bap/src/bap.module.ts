@@ -9,7 +9,7 @@ import { OnConfirmModule } from './on-confirm/on-confirm.module';
 import { HttpModule } from '@nestjs/axios';
 import { OnUpdateModule } from './on-update/on-update.module';
 import { OnTrackModule } from './on-track/on-track.module';
-
+import { TerminusModule } from '@nestjs/terminus';
 @Module({
   imports: [
     SearchModule,
@@ -20,8 +20,9 @@ import { OnTrackModule } from './on-track/on-track.module';
     HttpModule,
     OnUpdateModule,
     OnTrackModule,
+    TerminusModule,
   ],
   controllers: [BapController],
   providers: [BapService],
 })
-export class BapModule { }
+export class BapModule {}
