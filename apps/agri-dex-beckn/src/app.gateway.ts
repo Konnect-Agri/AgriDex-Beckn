@@ -32,7 +32,7 @@ export class AppGateway {
     private readonly trackService: TrackService,
     private readonly updateService: UpdateService,
     private readonly httpService: HttpService,
-  ) { }
+  ) {}
 
   @WebSocketServer() server: Server;
 

@@ -5,7 +5,7 @@ import { generateSelectMessage } from 'utils/generators';
 
 @Injectable()
 export class SelectService {
-  constructor(private readonly httpService: HttpService) { }
+  constructor(private readonly httpService: HttpService) {}
   async handleSelectRequest(body: any) {
     try {
       const itemId = body.message.order.items[0].id;
@@ -254,11 +254,8 @@ export class SelectService {
           )
           .pipe(map((item) => item.data)),
       );
-
       console.log('confirmed order: ', confirmedOrder.errors);
-
       console.log('response for select in test-api: ', response);
-
       return response;
     } catch (err) {
       console.log('err in select service of test-api: ', err);
