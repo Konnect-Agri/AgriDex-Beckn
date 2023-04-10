@@ -1,0 +1,101 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "AppController_getHello",
+        "summary": "Returns Hello World when the server is up",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "type": "string" } }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "AppController_handleResponse",
+        "parameters": [],
+        "responses": { "201": { "description": "" } }
+      }
+    },
+    "/orders": {
+      "post": {
+        "operationId": "AppController_getUserOrders",
+        "summary": "Returns Orders by Client ID",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/GetOrderByClientIdDTO" }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetOrderByClientIDResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "info": {
+    "title": "AgriDex-Beckn-Client-Proxy",
+    "description": "API for the client proxy service of agridex-beckn APIs",
+    "version": "0.0",
+    "contact": {}
+  },
+  "tags": [{ "name": "agridex-beckn-proxy", "description": "" }],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "GetOrderByClientIdDTO": {
+        "type": "object",
+        "properties": {
+          "client_id": { "type": "string", "description": "Client ID" }
+        },
+        "required": ["client_id"]
+      },
+      "OrderClientMappingsItem": {
+        "type": "object",
+        "properties": {
+          "client_id": { "type": "string", "description": "Client ID" },
+          "order_id": { "type": "string", "description": "Order ID" }
+        },
+        "required": ["client_id", "order_id"]
+      },
+      "OrderClientMappings": {
+        "type": "object",
+        "properties": {
+          "order_client_mappings": {
+            "description": "Array of orders with order client mappings",
+            "allOf": [
+              { "$ref": "#/components/schemas/OrderClientMappingsItem" }
+            ]
+          }
+        },
+        "required": ["order_client_mappings"]
+      },
+      "GetOrderByClientIDResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Response with orders",
+            "allOf": [{ "$ref": "#/components/schemas/OrderClientMappings" }]
+          }
+        },
+        "required": ["data"]
+      }
+    }
+  }
+}

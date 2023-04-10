@@ -4,24 +4,13 @@ import { lastValueFrom, map } from 'rxjs';
 
 @Injectable()
 export class UpdateService {
-  constructor(private readonly httpService: HttpService) { }
+  constructor(private readonly httpService: HttpService) {}
 
   async handleUpdate(body: any) {
     console.log('message.order: ', body.message);
     const order = body.message.order;
     console.log('message.body.order in test-api: ', order);
     try {
-      //     const gql = `mutation updateLoanApplication {
-      //       update_loan_applications_by_pk (
-      //         pk_columns: {order_id: ${order.id}}
-      //         _set:{order_details: ${order}
-      //   } ) {
-      //     order_id,
-      //     order_details
-      //   }
-      // }
-      //     `;
-
       const gql = `mutation updateLoanApplication($order_id: String, $changes: loan_applications_set_input) {
         update_loan_applications (
           where: {order_id: {_eq: $order_id}},
@@ -34,15 +23,6 @@ export class UpdateService {
           }
         }
       }`;
-      // const gql = `mutation update_a_loan_application {
-      //   update_loan_applications_by_pk (
-      //     pk_columns: {order_id: "${order.id}" }
-      //     _set: { order_details: "${JSON.stringify(order)}" }
-      //   ) {
-      //     order_id
-      //     order_details
-      //   }
-      // }`;
 
       const requestOptions = {
         headers: {

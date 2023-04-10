@@ -1,15 +1,16 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { lastValueFrom, map } from 'rxjs';
+import { GetOrderByClientIdDTO } from './dto/GetOrdersByClientId.dto';
 
 @Injectable()
 export class AppService {
-  constructor(private readonly httpService: HttpService) { }
+  constructor(private readonly httpService: HttpService) {}
   getHello(): string {
     return 'Hello World!';
   }
 
-  async getUserOrders(body: any) {
+  async getUserOrders(body: GetOrderByClientIdDTO) {
     console.log('in user orders');
     const gql = `query getClientOrders {
       order_client_mappings(where: {client_id: {_eq: "${body.client_id}"}}) {

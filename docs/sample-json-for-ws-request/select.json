@@ -1,0 +1,36 @@
+{
+  "context": {
+      "action": "select",
+      "domain": "agriculture",
+      "core_version": "0.9.3",
+      "country": {
+        "code": "IND"
+      },
+      "city": {
+        "code": "DEL"
+      },
+      "timestamp": "1669902051677",
+      "transaction_id": "1669902051677",
+      "bap_id": 101,
+      "bap_uri": "http://64.227.181.5:3006",
+      "bpp_id": 301,
+      "bpp_uri": "http://64.227.181.5:3008"
+    },
+    "message": {
+      "order": {
+        "id": "order-1669902051677",
+        "state": "draft",
+        "provider": {
+          "id": "Bank 1"
+        },
+        "items": [
+          {
+            "id": 1,
+            "quantity": 1
+          }
+        ],
+        "created_at": "1669902051677",
+        "update_at": "1669902051677"
+      }
+  }
+}

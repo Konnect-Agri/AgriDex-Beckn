@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { RedisIoAdapter } from './adapters/redis-socketio.adapter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as fs from 'fs';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -24,6 +25,7 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
+  fs.writeFileSync('./swagger.json', JSON.stringify(document));
   SwaggerModule.setup('api', app, document);
 
   await app.listen(process.env.AGRI_DEX_BECKN_PORT || 3003);

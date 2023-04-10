@@ -1,0 +1,85 @@
+{
+  "context": {
+      "action": "init",
+      "domain": "agriculture",
+      "core_version": "0.9.3",
+      "country": {
+          "code": "IND"
+      },
+      "city": {
+          "code": "DEL"
+      },
+      "timestamp": "1669902051677",
+      "transaction_id": "1669902051677",
+      "bap_id": 101,
+      "bap_uri": "http://64.227.181.5:3006",
+      "bpp_id": 301,
+      "bpp_uri": "http://64.227.181.5:3008"
+  },
+  "message": {
+      "order": {
+          "id": "order-1669902051677",
+          "state": "draft",
+          "provider": {
+              "id": "Bank 1"
+          },
+          "items": [
+              {
+                  "id": 1,
+                  "quantity": 1
+              }
+          ],
+          "loan_application_doc": {
+              "applicant_details": {
+                  "basic_details": {
+                      "dob": "n;fbn;",
+                      "name": "n;dkfnb; ns;kfbn; n;kffbn",
+                      "tags": {
+                          "fathers_name": "s;bn;",
+                          "mothers_name": ";nsfb;kn",
+                          "marital_status": "n;kdfnb;"
+                      },
+                      "gender": ";ns;fkbn;",
+                      "aadhar_number": "123456789",
+                      "pan_card_number": "n;sffbns;b",
+                      "educatioal_qualification": "n;fbn;"
+                  },
+                  "income_details": {
+                      "other_income": "nslfbn'ln",
+                      "total_income": "nfdlbn'l",
+                      "agricultural_income": "'nsfbns'ln",
+                      "other_income_source": "'ndfbn'",
+                      "agricultural_income_source": "ns'lffnb'lsn"
+                  },
+                  "guarantor_details": {
+                      "name": "l'sfbl'n",
+                      "email": "ln'lsfbn'ln'l",
+                      "mobile": "'lnsfbn'bn'",
+                      "relationship": "l'nsfbn'",
+                      "pan_card_number": "l'sffbd'bn"
+                  },
+                  "permanent_correspondence_details": {
+                      "address": ";nfb;ns",
+                      "contact": {
+                          "phone": ";nsdf;bn;"
+                      }
+                  },
+                  "temporary_correspondence_details": {
+                      "address": "nb;n",
+                      "contact": {
+                          "phone": "n;snfbn"
+                      }
+                  }
+              },
+              "application_basic_info": {
+                  "block": "sfb;n",
+                  "amount": ";ns;fkfbn;",
+                  "district": "lsfbl",
+                  "project_type": "flbslb"
+              }
+          },
+          "created_at": "1669902051677",
+          "update_at": "1669902051677"
+      }
+  }
+}

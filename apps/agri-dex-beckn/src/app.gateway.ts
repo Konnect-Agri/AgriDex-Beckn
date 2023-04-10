@@ -44,7 +44,7 @@ export class AppGateway {
   // response handler
   @SubscribeMessage('response')
   async handleResponse(@MessageBody() response: any) {
-    console.log('response methiod');
+    console.log('response method');
     console.log('action: ', response.context.action);
     const transaction_id = response.context.transaction_id;
     if (response.context.action === 'confirm') {
