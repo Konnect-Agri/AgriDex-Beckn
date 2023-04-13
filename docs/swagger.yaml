@@ -1,16 +1,12 @@
 openapi: 3.0.3
 info:
-  title: Konnect <> Beckn Protocol Server
+  title: Enabling crop loans on SAFAL - API Documentation
   description: 
-    API documentation for the Konnect <> Beckn Protocol Server communication
-  contact:
-    email: yash.wfc2022@samagragovernance.in
+    API documentation for Safal portal, Beckn protocol server and Bank server communication
   version: 0.0.1
 externalDocs:
   description: Find out more about Konnect
   url: https://github.com/Konnect-Agri
-servers:
-  - url: <SERVER _URL_HERE>
 
 paths:
   /search:
@@ -131,7 +127,59 @@ paths:
                   error:
                     $ref: '#/components/schemas/Error'
                 required:
-                  - context  
+                  - context
+  /authenticate:
+    post:
+      tags:
+        - authenticate
+      summary: Send KCC number entered by the farmer to the bank’s portal for validation
+      operationId: authenticateFarmer
+      requestBody:
+        description: Validate farmer's KCC number
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FarmerKCCRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FarmerKCCSuccess'          
+        '400':
+          description: Invalid KCC / Aadhaar Number Supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FarmerKCCError'
+  /calculate:
+    post:
+      tags:
+        - calculate
+      summary: Send farmer's land and crop details to bank for NCL calculation
+      operationId: calculateNCL
+      requestBody:
+        description: Calculate farmers NCL
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FarmerNCLRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FarmerNCLSuccess'          
+        '400':
+          description: Invalid KCC / Aadhaar Number Supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FarmerNCLError'  
   /init:
     post:
       tags:
@@ -1833,3 +1881,70 @@ components:
         required:
           description: Indicates whether the form data is mandatorily required by the BPP to confirm the order.
           type: boolean
+    FarmerKCCRequest:
+      type: object
+      properties:
+        kcc_number:
+          type: string
+          description: KCC Number entered
+          example: 123ABC
+        aadhaar_number:
+          type: string
+          description: Farmer's Aadhaar number
+          example: XXXXYYYYZZZZ
+    FarmerKCCSuccess:
+      type: object
+      properties:
+        bank_token:
+          type: string
+          description: Authentication token from bank
+          example: hKpKupTM391pE10xfQiorMxXarRKAHRhTfH_xkGf7U4
+    FarmerKCCError:
+      type: object
+      properties:
+        error_code:
+          type: string
+          description: Code of the error
+          example: 1001
+        error_message:
+          type: string
+          description: Message detailing the error
+          example: KCC Number not found
+    FarmerNCLRequest:
+      type: object
+      properties:
+        district_code:
+          type: integer
+          description: District code of user
+          example: 17
+        land:
+          type: integer
+          description: User's land in meters
+          example: 1000
+        crop:
+          type: object
+          properties:
+            code:
+              type: integer
+              description: Code of the crop selected by user
+            name:
+              type: string
+              description: Name of the crop selected by user
+    FarmerNCLSuccess:
+      type: object
+      properties:
+        ncl:
+          type: number
+          description: NCL for farmer
+          example: 50000.00
+    FarmerNCLError:
+      type: object
+      properties:
+        error_code:
+          type: string
+          description: Code of the error
+          example: 1001
+        error_message:
+          type: string
+          description: Message detailing the error
+          example: Invalid crop code
