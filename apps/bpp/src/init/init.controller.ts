@@ -3,7 +3,7 @@ import { InitService } from './init.service';
 
 @Controller('init')
 export class InitController {
-  constructor(private readonly initService: InitService) { }
+  constructor(private readonly initService: InitService) {}
 
   @Post()
   async handleInit(@Body() body: any) {

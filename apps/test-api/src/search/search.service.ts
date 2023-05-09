@@ -4,7 +4,7 @@ import { lastValueFrom, map } from 'rxjs';
 
 @Injectable()
 export class SearchService {
-  constructor(private readonly httpService: HttpService) { }
+  constructor(private readonly httpService: HttpService) {}
   async handleSearchRequest(body: any) {
     try {
       console.log('in test-api search: ', body);
@@ -55,12 +55,12 @@ export class SearchService {
         }
       }
 
-      const responseCatalogue = {
+      const responseCatalog = {
         context: {
           ...body.context,
         },
         message: {
-          catalogue: {
+          catalog: {
             descriptor: {
               name: `Catalogue for search query with block: ${block}, district: ${district}, bank_name: ${bank_name}`,
             },
@@ -72,21 +72,26 @@ export class SearchService {
                 },
                 items: providerWise[provider].map((prod) => {
                   return {
-                    id: prod.id,
+                    id: prod.id + '',
                     descriptor: {
                       name: prod.loan_product,
                     },
-                    price: prod.maximum_loan_amt,
+                    price: {
+                      currency: 'INR',
+                      value: prod.maximum_loan_amt + '',
+                    },
                     provider: {
                       id: provider,
                     },
-                    tags: {
-                      block: prod.block,
-                      district: prod.district,
-                      loan_tenure: prod.loan_tenure,
-                      interest_rate: prod.interest_rate,
-                      processing_charges: prod.processing_charges,
-                    },
+                    tags: [
+                      {
+                        block: prod.block,
+                        district: prod.district,
+                        loan_tenure: prod.loan_tenure,
+                        interest_rate: prod.interest_rate,
+                        processing_charges: prod.processing_charges,
+                      },
+                    ],
                   };
                 }),
               };
@@ -95,8 +100,12 @@ export class SearchService {
         },
       };
 
-      console.log('responseCatalogue: ', responseCatalogue);
-      return responseCatalogue;
+      console.log('responseCatalog: ', responseCatalog);
+
+      // fixes as per 1.0.0
+      responseCatalog['context'].action = 'on_search';
+
+      return responseCatalog;
     } catch (err) {
       console.log('err in test-api search: ', err);
       throw new InternalServerErrorException(err);

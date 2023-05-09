@@ -37,6 +37,7 @@
     "@types/redis": "^4.0.11",
     "concurrently": "^7.4.0",
     "dsep-beckn-schema": "^1.0.1",
+    "libsodium-wrappers": "^0.7.11",
     "redis": "^4.4.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",

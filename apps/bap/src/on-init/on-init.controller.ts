@@ -2,9 +2,9 @@ import { Body, Controller, Post, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { OnInitService } from './on-init.service';
 
-@Controller('on-init')
+@Controller('on_init')
 export class OnInitController {
-  constructor(private readonly onInitService: OnInitService) { }
+  constructor(private readonly onInitService: OnInitService) {}
 
   @Post()
   async handleOnInit(

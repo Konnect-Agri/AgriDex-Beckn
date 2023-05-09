@@ -8,7 +8,7 @@ export class ConfirmService {
   constructor(
     private readonly updateService: UpdateService,
     private readonly httpService: HttpService,
-  ) { }
+  ) {}
   async handleConfirm(body: any, host: string) {
     console.log('in confirm service');
     // const { order_id, review, status } = body;
@@ -35,19 +35,23 @@ export class ConfirmService {
     //     order_details
     //   }
     // }`;
+    const createOrderGQL = `mutation insertLoanApplication ($application: loan_applications_insert_input!){
+      insert_loan_applications_one (object: $application) {
+        order_id
+        order_details
+      }
+    }`;
 
-    const createOrderGQL = `mutation updateLoanApplication($order_id: String, $changes: loan_applications_set_input) {
-        update_loan_applications (
-          where: {order_id: {_eq: $order_id}},
-          _set: $changes
-        ) {
-          affected_rows
-          returning {
-            order_id
-            order_details
-          }
-        }
-      }`;
+    // const createOrderGQL = `mutation updateLoanApplication($changes: loan_applications_set_input) {
+    //     insert_loan_applications (
+    //       _set: $changes
+    //     ) {
+
+    //         order_id
+    //         order_details
+
+    //     }
+    //   }`;
 
     console.log('createOrderGQL: ', createOrderGQL);
 
@@ -67,8 +71,8 @@ export class ConfirmService {
           {
             query: createOrderGQL,
             variables: {
-              order_id: body.message.order.id,
-              changes: {
+              application: {
+                order_id: body.message.order.id,
                 order_details: body.message.order,
               },
             },

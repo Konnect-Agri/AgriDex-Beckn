@@ -48,10 +48,7 @@ export class UpdateService {
           )
           .pipe(map((item) => item.data)),
       );
-      console.log(
-        'res in test api update: ',
-        res.data.update_loan_applications.returning,
-      );
+      console.log('res in test api update: ', res.data);
       res = res.data.update_loan_applications.returning;
       return res;
     } catch (err) {
