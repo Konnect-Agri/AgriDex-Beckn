@@ -3,7 +3,7 @@ import { UpdateService } from './update.service';
 
 @Controller('update')
 export class UpdateController {
-  constructor(private readonly updateService: UpdateService) { }
+  constructor(private readonly updateService: UpdateService) {}
 
   @Post()
   handleUpdate(@Body() body: any) {

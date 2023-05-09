@@ -630,16 +630,22 @@ paths:
                       - properties:
                           action:
                             enum:
-                              - on_search
+                              - on_track
                         required:
                           - action
                   message:
                     type: object
                     properties:
-                      order_id:
-                        type: string
-                      callback_url:
-                        type: string
+                      tracking:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          url:
+                            type: string
+                          status:
+                            type: string
+                            enum: ['active', 'inactive']
                 required:
                   - context
         '500':

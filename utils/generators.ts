@@ -279,6 +279,11 @@ type FULFILMENT_PERSON = {
     phone: number;
     email: string;
   };
+  customer?: {
+    person?: {
+      id?: string;
+    }
+  }
 };
 
 type SELECT_MESSAGE = {
@@ -305,43 +310,53 @@ type SELECT_MESSAGE = {
 export const generateSelectMessage = (_details: SELECT_MESSAGE) => {
   return {
     order: {
-      id: _details.order_id,
+      id: _details.order_id + '',
       provider: {
-        id: _details.provider.id,
+        id: _details.provider.id + '',
         descriptor: {
-          name: _details.provider.name,
+          name: _details.provider.name + '',
         },
-        items: [
-          {
-            id: _details.item.id,
-            descriptor: {
-              name: _details.item.name,
-            },
-            price: _details.item.price,
-            provider: {
-              id: _details.provider.id,
-            },
-            tags: {
-              block: _details.item.tags.block,
-              district: _details.item.tags.district,
-              loan_tenure: _details.item.tags.loan_tenure,
-              interest_rate: _details.item.tags.interest_rate,
-              processing_charges: _details.item.tags.processing_charges,
-            },
-          },
-        ],
-        fulfillments: _details.fulfillment.map((person: FULFILMENT_PERSON) => {
-          return {
-            id: person.id,
-            type: person.type,
-            provider_id: person.provider_id,
-            tracking: person.tracking,
-            agent: {
-              name: person.agent.name,
-            },
-          };
-        }),
       },
+      items: [
+        {
+          id: _details.item.id + '',
+          descriptor: {
+            name: _details.item.name + '',
+          },
+          price: {
+            currency: 'INR',
+            value: _details.item.price + '',
+          },
+          provider: {
+            id: _details.provider.id + '',
+          },
+          tags: [
+            {
+              block: _details.item.tags.block + '',
+              district: _details.item.tags.district + '',
+              loan_tenure: _details.item.tags.loan_tenure + '',
+              interest_rate: _details.item.tags.interest_rate + '',
+              processing_charges: _details.item.tags.processing_charges + '',
+            },
+          ],
+        },
+      ],
+      fulfillments: _details.fulfillment.map((person: FULFILMENT_PERSON) => {
+        return {
+          id: person.id,
+          type: person.type,
+          provider_id: person.provider_id,
+          tracking: person.tracking,
+          agent: {
+            name: person.agent.name,
+          },
+          customer: {
+            person: {
+              name: person.customer.person.id,
+            }
+          }
+        };
+      }),
     },
   };
 };

@@ -3,7 +3,7 @@ import { ConfirmService } from './confirm.service';
 
 @Controller('confirm')
 export class ConfirmController {
-  constructor(private readonly confirmService: ConfirmService) { }
+  constructor(private readonly confirmService: ConfirmService) {}
 
   @Post()
   async handleInitialRequest(@Body() body: any) {

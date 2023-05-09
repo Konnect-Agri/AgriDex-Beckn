@@ -3,7 +3,7 @@ import { SelectService } from './select.service';
 
 @Controller('select')
 export class SelectController {
-  constructor(private readonly selectService: SelectService) { }
+  constructor(private readonly selectService: SelectService) {}
 
   @Post()
   async handleSelect(@Body() body: any) {

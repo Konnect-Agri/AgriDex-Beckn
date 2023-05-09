@@ -2,10 +2,11 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { requestForwarder } from 'utils/utils';
 import { lastValueFrom, map } from 'rxjs';
+import { createAuthorizationHeader } from '../utils/authBuilder';
 
 @Injectable()
 export class UpdateService {
-  constructor(private readonly httpService: HttpService) { }
+  constructor(private readonly httpService: HttpService) {}
 
   async handleUpdate(body: any) {
     console.log('in update bpp');
@@ -34,11 +35,41 @@ export class UpdateService {
         },
       };
       console.log('onUpdateResp: ', onUpdateResp);
-      return requestForwarder(
-        body.context.bap_uri + '/on-update',
-        onUpdateResp,
-        this.httpService,
-      );
+      try {
+        onUpdateResp.context.action = 'on_update';
+        const authHeader = await createAuthorizationHeader(onUpdateResp).then(
+          (res) => {
+            console.log(res);
+            return res;
+          },
+        );
+        console.log('auth header: ', authHeader);
+
+        const requestOptions = {
+          headers: {
+            'Content-Type': 'application/json',
+            authorization: authHeader,
+          },
+          withCredentials: true,
+          mode: 'cors',
+        };
+        console.log('calling request forwarder');
+        await lastValueFrom(
+          this.httpService.post(
+            onUpdateResp.context.bap_uri + '/on_update',
+            onUpdateResp,
+            requestOptions,
+          ),
+        );
+      } catch (err) {
+        console.log('error in request forwarder: ', err);
+        return new InternalServerErrorException(err);
+      }
+      // return requestForwarder(
+      //   body.context.bap_uri + '/on_update',
+      //   onUpdateResp,
+      //   this.httpService,
+      // );
     } catch (err) {
       console.log('err: ', err);
       throw new InternalServerErrorException();

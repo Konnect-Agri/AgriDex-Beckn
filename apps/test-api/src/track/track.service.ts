@@ -4,7 +4,7 @@ import { lastValueFrom, map } from 'rxjs';
 
 @Injectable()
 export class TrackService {
-  constructor(private readonly httpService: HttpService) { }
+  constructor(private readonly httpService: HttpService) {}
 
   async getAllTrackings() {
     try {
@@ -66,8 +66,8 @@ export class TrackService {
     );
 
     return {
-      status: appForm.data.order_tracking_details[0].status,
-      url: appForm.data.order_tracking_details[0].url,
+      status: appForm.data.order_tracking_details[0]?.status,
+      url: appForm.data.order_tracking_details[0]?.url,
     };
   }
 }
