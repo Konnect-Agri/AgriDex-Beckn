@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { OnUpdateService } from './on-update.service';
 
-@Controller('on-update')
+@Controller('on_update')
 export class OnUpdateController {
   constructor(private readonly onUpdateService: OnUpdateService) { }
 
