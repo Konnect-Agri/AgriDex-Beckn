@@ -2,7 +2,7 @@ import { Body, Controller, Post, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { OnConfirmService } from './on-confirm.service';
 
-@Controller('on-confirm')
+@Controller('on_confirm')
 export class OnConfirmController {
   constructor(private readonly onConfirmService: OnConfirmService) { }
 

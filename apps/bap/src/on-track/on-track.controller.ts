@@ -2,7 +2,7 @@ import { Body, Controller, Post, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { OnTrackService } from './on-track.service';
 
-@Controller('on-track')
+@Controller('on_track')
 export class OnTrackController {
   constructor(private readonly onTrackService: OnTrackService) { }
 

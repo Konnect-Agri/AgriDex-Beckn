@@ -5,9 +5,9 @@ import { SearchService } from './on-search.service';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Ack } from 'utils/types/ack';
 
-@Controller('on-search')
+@Controller('on_search')
 export class SearchController {
-  constructor(private readonly searchService: SearchService) {}
+  constructor(private readonly searchService: SearchService) { }
 
   @ApiOperation({
     summary: 'Listen to the response of async search request from the BPP',

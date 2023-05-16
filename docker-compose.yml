@@ -1,0 +1,52 @@
+version: '3'
+
+services:
+  bap:
+    image: bap
+    build:
+      context: .
+      dockerfile: apps/bap/Dockerfile
+    env_file:
+      - .env
+    ports:
+      - 3010:3010
+
+  bpp:
+    image: bpp
+    build:
+      context: .
+      dockerfile: apps/bpp/Dockerfile
+    env_file:
+      - .env
+    ports:
+      - 3002:3002
+
+  bg:
+    image: bg
+    build:
+      context: .
+      dockerfile: apps/bg/Dockerfile
+    env_file:
+      - .env
+    ports:
+      - 3001:3001
+
+  agri-dex-beckn:
+    image: agri-dex-beckn
+    build:
+      context: .
+      dockerfile: apps/agri-dex-beckn/Dockerfile
+    env_file:
+      - .env
+    ports:
+      - 3003:3003
+
+  test-api:
+    image: test-api
+    build:
+      context: .
+      dockerfile: apps/test-api/Dockerfile
+    env_file:
+      - .env
+    ports:
+      - 3004:3004

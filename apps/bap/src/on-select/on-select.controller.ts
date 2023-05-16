@@ -4,7 +4,7 @@ import { OnSelectService } from './on-select.service';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Ack } from 'utils/types/ack';
 
-@Controller('on-select')
+@Controller('on_select')
 export class OnSelectController {
   constructor(private readonly onSelectService: OnSelectService) {}
   @ApiOperation({
