@@ -172,16 +172,14 @@ paths:
     post:
       tags:
         - authenticate
-      summary: >-
-        Send KCC number entered by the farmer to the bank’s portal for
-        validation
+      summary: Send membership number entered by the farmer to the bank’s portal for validation
       operationId: authenticateFarmer
       requestBody:
-        description: Validate farmer's KCC number
+        description: Validate farmer's membership number
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FarmerKCCRequest'
+              $ref: '#/components/schemas/FarmerAuthRequest'
         required: true
       responses:
         '200':
@@ -189,13 +187,39 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FarmerKCCSuccess'
+                $ref: '#/components/schemas/FarmerAuthSuccess'
         '400':
           description: Invalid KCC / Aadhaar Number Supplied
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FarmerKCCError'
+                $ref: '#/components/schemas/FarmerAuthError'
+  /register:
+    post:
+      tags:
+        - register
+      summary: Register farmer
+      operationId: registerFarmer
+      requestBody:
+        description: Register farmer for new membership ID
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FarmerRegRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FarmerRegSuccess'
+        '400':
+          description: Invalid registration request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FarmerRegError'
   /calculate:
     post:
       tags:
@@ -222,19 +246,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FarmerNCLError'
-  /register:
+  /registerConsent:
     post:
       tags:
         - Consent artifact request from Consumer
       summary: Consent artifact request from Consumer
       description: Consent artifact request from Consumer
-      operationId: register
+      operationId: registerConsent
       requestBody:
         description: Consent artifact request from Consumer
         content:
           application/json:
             schema:
-                $ref: '#/components/schemas/ConsentArtifact'
+              $ref: '#/components/schemas/ConsentArtifact'
       responses:
         '200':
           description: Successful operation
@@ -361,8 +385,8 @@ paths:
                         - crop_type: rabi
                           land_cultivation_area: '1234'
                           permanent_address: 123/45 Some Street, Great City
-              
-          
+
+
       responses:
         '200':
           description: Successful operation
@@ -523,7 +547,7 @@ paths:
                         - crop_type: rabi
                           land_cultivation_area: '1234'
                           permanent_address: 123/45 Some Street, Great City
-              
+
       responses:
         '200':
           description: Successful operation
@@ -615,7 +639,7 @@ paths:
                 ttl: PT10M
               message:
                 order_id: order-1681225144247
-              
+
       responses:
         '200':
           description: Successful operation
@@ -645,7 +669,7 @@ paths:
                             type: string
                           status:
                             type: string
-                            enum: ['active', 'inactive']
+                            enum: [ 'active', 'inactive' ]
                 required:
                   - context
         '500':
@@ -797,7 +821,7 @@ paths:
                         - crop_type: rabi
                           land_cultivation_area: '1234'
                           permanent_address: 123/45 Some Street, Great City
-              
+
       responses:
         '200':
           description: Successful operation
@@ -1253,25 +1277,26 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/LoanItem'
-    FarmerKCCRequest:
+
+    FarmerAuthRequest:
       type: object
       properties:
         kcc_number:
           type: string
-          description: KCC Number entered
+          description: Membership Number entered
           example: 123ABC
         aadhaar_number:
           type: string
           description: Farmer's Aadhaar number
           example: XXXXYYYYZZZZ
-    FarmerKCCSuccess:
+    FarmerAuthSuccess:
       type: object
       properties:
         bank_token:
           type: string
           description: Authentication token from bank
           example: hKpKupTM391pE10xfQiorMxXarRKAHRhTfH_xkGf7U4
-    FarmerKCCError:
+    FarmerAuthError:
       type: object
       properties:
         error_code:
@@ -1281,7 +1306,170 @@ components:
         error_message:
           type: string
           description: Message detailing the error
-          example: KCC Number not found
+          example: Membership Number not found
+    FarmerRegRequest:
+      type: object
+      properties:
+        age:
+          type: integer
+          description: age of farmer
+          example: 17
+        genderId:
+          type: string
+          enum:
+            - "1"
+            - "2"
+          description: >
+            Farmer's Gender: `1` - Male, `2` - Female
+          example: "1"
+        contactDetailList:
+          type: array
+          items:
+            type: object
+            properties:
+              addressTypeId:
+                type: string
+                enum:
+                  - "1"
+                  - "2"
+                description: >
+                  Farmer's Address Type: `1` - Permanent Address, `2` - Correspondence Address
+                example: "1"
+              districtId:
+                type: number
+                description: District ID of farmer
+                example: 2
+              talukaId:
+                type: number
+                description: Taluka ID of farmer
+                example: 7
+              villageId:
+                type: number
+                description: Village ID of farmer
+                example: 620
+        digitalProofDetailList:
+          type: array
+          items:
+            type: object
+            properties:
+              typeId:
+                type: string
+                enum:
+                  - "1"
+                  - "2"
+                  - "3"
+                  - "4"
+                  - "5"
+                  - "6"
+                description: >
+                  Farmer's Identity proof Id: `1` - AADHAR CARD, `2` - PAN CARD, `3` - SIGNATURE, `4` - PHOTO, `5` - THUMB IMPRESSION, `6` - PASSPORT
+                example: "1"
+              typeName:
+                type: string
+                description: Based on typeId selected above
+                example: AADHAAR CARD
+              documentNumber:
+                type: string
+                description: Number entered by farmer
+                example: 461124561223
+        memberCategoryId:
+          type: string
+          enum:
+            - "AC0001"
+            - "AC0003"
+            - "AC0004"
+            - "AC0005"
+          description: >
+            Farmer's category id: `AC0001` - GENERAL, `AC0003` - OTHERS, `AC0004` - SR. CITIZEN, `AC0005` - WOMEN
+          example: "AC0001"
+        name:
+          type: string
+          description: Farmer's name
+          example: KOMALI Sane
+        fatherSpouseName:
+          type: string
+          description: Farmer's father name if gender is male else spouse name
+          example: Goutam
+        customerTypeId:
+          type: string
+          enum:
+            - "1"
+            - "2"
+            - "3"
+          description: >
+            Farmer's Type id: `1` - General, `2` - Individual, `3` - Others
+          example: "1"
+        membershipTypeId:
+          type: string
+          example: 1
+        farmerTypeId:
+          type: string
+          enum:
+            - "1"
+            - "2"
+            - "3"
+          description: >
+            Farmer's caste: `1` - Small, `2` - Marginal, `3` - Others
+          example: "1"
+        dateOfBirth:
+          type: string
+          example: 23/04/2004
+        casteId:
+          type: string
+          enum:
+            - "1"
+            - "2"
+            - "3"
+            - "4"
+          description: >
+            Farmer's caste: `1` - OBC, `2` - SC, `3` - ST, `4` - General
+          example: "1"
+        educationId:
+          type: string
+          enum:
+            - "1"
+            - "2"
+            - "3"
+            - "4"
+            - "9"
+            - "10"
+            - "11"
+            - "12"
+          description: >
+            Farmer's education: SSC - `1`, Graduate - `2` , PostGraduate- `3`, HSC- `4`, Bachelor of Engineering- `9`, Bachelor of Science - `10`, Secondary School Certificate - `11`, Uneducated- `12`
+          example: "1"
+        occupationId:
+          type: string
+          enum:
+            - "2"
+            - "4"
+          description: >
+            Farmer's occupation: Farmer - `2`, Agri Labor - `4`
+          example: "2"
+        pacsId:
+          type: string
+          example: 00124
+    FarmerRegSuccess:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "200"
+        message:
+          type: string
+          example: "Member Details Saved Successful with Member Id : 300900100014319 and Share Account Number : 300900100101373374"
+    FarmerRegError:
+      type: object
+      properties:
+        error_code:
+          type: string
+          description: Code of the error
+          example: 1001
+        error_message:
+          type: string
+          description: Message detailing the error
+          example: Invalid member type
+
     FarmerNCLRequest:
       type: object
       properties:
@@ -1342,7 +1530,7 @@ components:
           type: string
         webhook_url:
           description: Webhook URL where the user was notified of the access request
-          
+
     ConsentArtifact:
       description: This schema defines the structure of a consent artifact. In the description of fields, the term `user` refers to the entity whose data needs to be accessed. For example in case of Safal Odisha, the `user` will be a farmer whose data needs to be fetched from the Krushak Odisha database.
       type: object
@@ -1366,7 +1554,7 @@ components:
           description: Information about the data collector
           type: object
           properties:
-            id: 
+            id:
               type: string
             url:
               type: string
@@ -1374,7 +1562,7 @@ components:
           description: Information about the data consumer (whoever will be using the data fetched using the consent artifact)
           type: object
           properties:
-            id: 
+            id:
               type: string
             url:
               type: string
@@ -1382,7 +1570,7 @@ components:
           description: Information about the data provider
           type: object
           properties:
-            id: 
+            id:
               type: string
             url:
               type: string
@@ -1390,7 +1578,7 @@ components:
           description: Information about the artifact revoker
           type: object
           properties:
-            id: 
+            id:
               type: string
             url:
               type: string
@@ -1398,7 +1586,7 @@ components:
           description: Information about the user whose data can be accessed via this consent artifact
           type: object
           properties:
-            id: 
+            id:
               type: string
         purpose:
           description: Purpose of the consent artifact
@@ -1410,7 +1598,7 @@ components:
           description: cryptographic signature of the collector
           type: string
         frequency:
-          description: This object represents the frequence with which the data can be accessed using this consent artifact. We can do `limit` number of requests within `ttl` number of seconds  
+          description: This object represents the frequence with which the data can be accessed using this consent artifact. We can do `limit` number of requests within `ttl` number of seconds
           type: object
           properties:
             ttl:
@@ -1427,12 +1615,12 @@ components:
             consent_use:
               type: object
               properties:
-                url: 
+                url:
                   type: string
             data_access:
               type: object
               properties:
-                url: 
+                url:
                   type: string
         data:
           description: This is the superset GraphQL query containing of all the fields that the user has granted access to.
