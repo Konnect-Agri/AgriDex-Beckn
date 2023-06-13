@@ -6,16 +6,16 @@ import { lastValueFrom, map } from 'rxjs';
 import { createAuthorizationHeader } from '../utils/authBuilder';
 
 @Injectable()
-export class TrackService {
+export class CancelService {
   constructor(private readonly httpService: HttpService) { }
 
-  async handleTrackRequest(body: any) {
-    console.log('in BPP track: ', body);
+  async cancelRequest(body: any) {
+    console.log('in BPP cancel: ', body);
 
     // call the Bank server to get the response
     try {
-      const url = 'https://roots-dev.vsoftproducts.com:8082/wings-interface/safalIntegration/trackApplicationStatus';
-      const trackingResponse = await lastValueFrom(
+      const url = 'https://roots-dev.vsoftproducts.com:8082/wings-interface/safalIntegration/cancelApplication';
+      const cancelRes = await lastValueFrom(
         this.httpService
         .post(url, body, {
           headers: {
@@ -25,7 +25,7 @@ export class TrackService {
           .pipe(map((item) => item.data)),
       );
 
-      console.log("Logs from server (track) \n\n " + JSON.stringify(trackingResponse) + "\n\n *****************")
+      console.log("Logs from server (cancel) \n\n " + JSON.stringify(cancelRes) + "\n\n *****************")
 
       // const trackingResponse = {
       //   "context": {
@@ -49,13 +49,10 @@ export class TrackService {
       //   }
       // }
 
-      trackingResponse.context = body.context
-      trackingResponse.context.action = 'on_track';
-      if(trackingResponse.error === null) {
-        delete trackingResponse['error']
-      }
+      cancelRes.context = body.context
+      cancelRes.context.action = 'on_cancel';
       try {
-        const authHeader = await createAuthorizationHeader(trackingResponse).then(
+        const authHeader = await createAuthorizationHeader(cancelRes).then(
           (res) => {
             console.log(res);
             return res;
@@ -74,8 +71,8 @@ export class TrackService {
         console.log('calling request forwarder');
         await lastValueFrom(
           this.httpService.post(
-            trackingResponse.context.bap_uri + '/on_track',
-            trackingResponse,
+            cancelRes.context.bap_uri + '/on_cancel',
+            cancelRes,
             requestOptions,
           ),
         );
@@ -84,14 +81,8 @@ export class TrackService {
         return new InternalServerErrorException(err);
       }
 
-      // forward this tracking info to BAP
-      // return await requestForwarder(
-      //   body.context.bap_uri + '/on_track',
-      //   { context: body.context, message: trackingInfo },
-      //   this.httpService,
-      // );
     } catch (err) {
-      console.log('err in bpp track: ', err);
+      console.log('err in bpp cancel: ', err);
       throw new InternalServerErrorException();
     }
   }
