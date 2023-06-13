@@ -1,15 +1,16 @@
+/* eslint-disable prettier/prettier */
 import { Test, TestingModule } from '@nestjs/testing';
-import { TrackService } from './cancel.service';
+import { CancelService } from './cancel.service';
 
-describe('TrackService', () => {
-  let service: TrackService;
+describe('CancelService', () => {
+  let service: CancelService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [TrackService],
+      providers: [CancelService],
     }).compile();
 
-    service = module.get<TrackService>(TrackService);
+    service = module.get<CancelService>(CancelService);
   });
 
   it('should be defined', () => {

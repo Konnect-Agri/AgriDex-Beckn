@@ -1,15 +1,16 @@
+/* eslint-disable prettier/prettier */
 import { Test, TestingModule } from '@nestjs/testing';
-import { TrackController } from './cancel.controller';
+import { CancelController } from './cancel.controller';
 
-describe('TrackController', () => {
-  let controller: TrackController;
+describe('CancelController', () => {
+  let controller: CancelController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [TrackController],
+      controllers: [CancelController],
     }).compile();
 
-    controller = module.get<TrackController>(TrackController);
+    controller = module.get<CancelController>(CancelController);
   });
 
   it('should be defined', () => {

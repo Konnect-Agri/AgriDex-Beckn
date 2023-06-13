@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { HttpService } from '@nestjs/axios';
 import { Body, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { requestForwarder } from 'utils/utils';
@@ -25,32 +24,12 @@ export class CancelService {
           .pipe(map((item) => item.data)),
       );
 
-      console.log("Logs from server (cancel) \n\n " + JSON.stringify(cancelRes) + "\n\n *****************")
-
-      // const trackingResponse = {
-      //   "context": {
-      //     "transaction_id": "a9aaecca-10b7-4d19-b640-b047a7c62196",
-      //     "message_id": "a9aaecca-10b7-4d19-b640-b047a7c62196",
-      //     "action": "track",
-      //     "timestamp": "2022-12-12T09:55:41.161Z",
-      //     "domain": "dsep:courses",
-      //     "version": "1.0.0",
-      //     "bap_uri": "{{BAP_URI}}",
-      //     "bap_id": "{{BAP_ID}}}",
-      //     "bpp_id": "{{BPP_ID}}",
-      //     "bpp_uri": "{{BPP_URI}}",
-      //     "ttl": "PT10M"
-      //   },
-      //   "message": {
-      //     "tracking": {
-      //       "id": "125045,125069,876787,125095,125099",
-      //       "url": "https://roots-dev.vsoftproducts.com:8082/wings-interface/safalIntegration/trackStatus?track=125045,125069,876787,125095,125099&districtId=2"
-      //     }
-      //   }
-      // }
-
       cancelRes.context = body.context
       cancelRes.context.action = 'on_cancel';
+      cancelRes.message.order.cancellation.time = new Date(Date.now()).toISOString()
+      if(cancelRes.error === null) {
+        delete cancelRes['error']
+      }
       try {
         const authHeader = await createAuthorizationHeader(cancelRes).then(
           (res) => {

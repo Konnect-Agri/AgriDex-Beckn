@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { BppController } from './bpp.controller';
@@ -8,6 +9,7 @@ import { InitModule } from './init/init.module';
 import { ConfirmModule } from './confirm/confirm.module';
 import { UpdateModule } from './update/update.module';
 import { TrackModule } from './track/track.module';
+import { CancelModule } from './cancel/cancel.module';
 
 @Module({
   imports: [
@@ -20,6 +22,7 @@ import { TrackModule } from './track/track.module';
     ConfirmModule,
     UpdateModule,
     TrackModule,
+    CancelModule
   ],
   controllers: [BppController],
   providers: [BppService],

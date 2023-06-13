@@ -1,12 +1,13 @@
+/* eslint-disable prettier/prettier */
 import { Body, Controller, Post } from '@nestjs/common';
-import { TrackService } from './cancel.service';
+import { CancelService } from './cancel.service';
 
-@Controller('track')
-export class TrackController {
-  constructor(private readonly trackService: TrackService) {}
+@Controller('cancel')
+export class CancelController {
+  constructor(private readonly cancelService: CancelService) {}
 
   @Post()
-  async handleTrack(@Body() body: any) {
-    return this.trackService.handleTrackRequest(body);
+  async cancelTrack(@Body() body: any) {
+    return this.cancelService.cancelRequest(body);
   }
 }

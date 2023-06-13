@@ -25,30 +25,6 @@ export class TrackService {
           .pipe(map((item) => item.data)),
       );
 
-      console.log("Logs from server (track) \n\n " + JSON.stringify(trackingResponse) + "\n\n *****************")
-
-      // const trackingResponse = {
-      //   "context": {
-      //     "transaction_id": "a9aaecca-10b7-4d19-b640-b047a7c62196",
-      //     "message_id": "a9aaecca-10b7-4d19-b640-b047a7c62196",
-      //     "action": "track",
-      //     "timestamp": "2022-12-12T09:55:41.161Z",
-      //     "domain": "dsep:courses",
-      //     "version": "1.0.0",
-      //     "bap_uri": "{{BAP_URI}}",
-      //     "bap_id": "{{BAP_ID}}}",
-      //     "bpp_id": "{{BPP_ID}}",
-      //     "bpp_uri": "{{BPP_URI}}",
-      //     "ttl": "PT10M"
-      //   },
-      //   "message": {
-      //     "tracking": {
-      //       "id": "125045,125069,876787,125095,125099",
-      //       "url": "https://roots-dev.vsoftproducts.com:8082/wings-interface/safalIntegration/trackStatus?track=125045,125069,876787,125095,125099&districtId=2"
-      //     }
-      //   }
-      // }
-
       trackingResponse.context = body.context
       trackingResponse.context.action = 'on_track';
       if(trackingResponse.error === null) {
@@ -84,12 +60,6 @@ export class TrackService {
         return new InternalServerErrorException(err);
       }
 
-      // forward this tracking info to BAP
-      // return await requestForwarder(
-      //   body.context.bap_uri + '/on_track',
-      //   { context: body.context, message: trackingInfo },
-      //   this.httpService,
-      // );
     } catch (err) {
       console.log('err in bpp track: ', err);
       throw new InternalServerErrorException();

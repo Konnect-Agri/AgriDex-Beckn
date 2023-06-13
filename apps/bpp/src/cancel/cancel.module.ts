@@ -1,11 +1,12 @@
+/* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
-import { TrackService } from './cancel.service';
-import { TrackController } from './cancel.controller';
+import { CancelService } from './cancel.service';
+import { CancelController } from './cancel.controller';
 import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [HttpModule],
-  providers: [TrackService],
-  controllers: [TrackController],
+  providers: [CancelService],
+  controllers: [CancelController],
 })
-export class TrackModule { }
+export class CancelModule { }
