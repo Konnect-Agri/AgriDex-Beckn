@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { HttpService } from '@nestjs/axios';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 // import { requestForwarder } from 'utils/utils';
@@ -15,18 +16,23 @@ export class OnSearchService {
       console.log('in bpp');
 
       // forwarding request to providers
+      const url = 'https://roots-dev.vsoftproducts.com:8082/wings-interface/safalIntegration/getProductInformation';
+      // const url = 'process.env.TEST_API_URI + '/search''
       const responseCatalog = await lastValueFrom(
         this.httpService
-          .post(process.env.TEST_API_URI + '/search', searchDTO, {
+          .post(url, searchDTO, {
             headers: {
               'Content-Type': 'application/json',
             },
           })
           .pipe(map((item) => item.data)),
       );
-
-      console.log('response catalogue from test-api: ', responseCatalog);
-
+      
+      (responseCatalog as any).context = searchDTO.context;
+      responseCatalog.context.action = 'on_search';
+      if(responseCatalog.error === null) {
+        delete responseCatalog['error']
+      }
       try {
         const authHeader = await createAuthorizationHeader(
           responseCatalog,
@@ -45,6 +51,7 @@ export class OnSearchService {
           mode: 'cors',
         };
         console.log('calling request forwarder');
+
         await lastValueFrom(
           this.httpService.post(
             responseCatalog?.context?.bap_uri + '/on_search',

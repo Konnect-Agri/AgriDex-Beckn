@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { HttpService } from '@nestjs/axios';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { lastValueFrom, map } from 'rxjs';
@@ -14,24 +15,30 @@ export class InitService {
       if (!initDto.context.bap_uri) {
         throw new Error('Invalid Context: bap_uri is missing');
       }
+      console.log("Init statred @ " + Date.now())
 
-      // TODO: contact provider to register shipping details
-      // and populate the fullfilment object
-      console.log('in init service of bpp!');
+      const url = 'https://roots-dev.vsoftproducts.com:8082/wings-interface/safalIntegration/initiateSTLoanApplication';
+      // const url2 = process.env.TEST_API_URI + "/init"
+      const resp = await lastValueFrom(
+        this.httpService
+          .post(url, initDto, {
+            headers: { 'Content-Type': 'application/json' },
+          })
+          .pipe(map((item) => item.data)),
+      );
 
-      // TODO: integrate actual BANK APIs here
-      // const resp = await lastValueFrom(
-      //   this.httpService
-      //     .post(process.env.TEST_API_URI + '/init', initDto, {
-      //       headers: { 'Content-Type': 'application/json' },
-      //     })
-      //     .pipe(map((item) => item.data)),
-      // );
-
-      initDto.context.action = 'on_init';
-
+      console.log('response catalogue from bank server: ', resp);
+    
+      resp.context.action = 'on_init';
+      if(resp.error === null) {
+        delete resp['error']
+      }
+      if(resp.message.order.fulfillments[0].id === null){
+        delete resp.message.order.fulfillments[0].id
+        
+      } 
       try {
-        const authHeader = await createAuthorizationHeader(initDto).then(
+        const authHeader = await createAuthorizationHeader(resp).then(
           (res) => {
             console.log(res);
             return res;
@@ -50,8 +57,8 @@ export class InitService {
         console.log('calling request forwarder');
         await lastValueFrom(
           this.httpService.post(
-            initDto.context.bap_uri + '/on_init',
-            initDto,
+            resp.context.bap_uri + '/on_init',
+            resp,
             requestOptions,
           ),
         );

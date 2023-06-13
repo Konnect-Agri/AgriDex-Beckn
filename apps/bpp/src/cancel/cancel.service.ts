@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { HttpService } from '@nestjs/axios';
 import { Body, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { requestForwarder } from 'utils/utils';
@@ -6,16 +5,16 @@ import { lastValueFrom, map } from 'rxjs';
 import { createAuthorizationHeader } from '../utils/authBuilder';
 
 @Injectable()
-export class TrackService {
+export class CancelService {
   constructor(private readonly httpService: HttpService) { }
 
-  async handleTrackRequest(body: any) {
-    console.log('in BPP track: ', body);
+  async cancelRequest(body: any) {
+    console.log('in BPP cancel: ', body);
 
     // call the Bank server to get the response
     try {
-      const url = 'https://roots-dev.vsoftproducts.com:8082/wings-interface/safalIntegration/trackApplicationStatus';
-      const trackingResponse = await lastValueFrom(
+      const url = 'https://roots-dev.vsoftproducts.com:8082/wings-interface/safalIntegration/cancelApplication';
+      const cancelRes = await lastValueFrom(
         this.httpService
         .post(url, body, {
           headers: {
@@ -25,13 +24,14 @@ export class TrackService {
           .pipe(map((item) => item.data)),
       );
 
-      trackingResponse.context = body.context
-      trackingResponse.context.action = 'on_track';
-      if(trackingResponse.error === null) {
-        delete trackingResponse['error']
+      cancelRes.context = body.context
+      cancelRes.context.action = 'on_cancel';
+      cancelRes.message.order.cancellation.time = new Date(Date.now()).toISOString()
+      if(cancelRes.error === null) {
+        delete cancelRes['error']
       }
       try {
-        const authHeader = await createAuthorizationHeader(trackingResponse).then(
+        const authHeader = await createAuthorizationHeader(cancelRes).then(
           (res) => {
             console.log(res);
             return res;
@@ -50,8 +50,8 @@ export class TrackService {
         console.log('calling request forwarder');
         await lastValueFrom(
           this.httpService.post(
-            trackingResponse.context.bap_uri + '/on_track',
-            trackingResponse,
+            cancelRes.context.bap_uri + '/on_cancel',
+            cancelRes,
             requestOptions,
           ),
         );
@@ -61,7 +61,7 @@ export class TrackService {
       }
 
     } catch (err) {
-      console.log('err in bpp track: ', err);
+      console.log('err in bpp cancel: ', err);
       throw new InternalServerErrorException();
     }
   }
