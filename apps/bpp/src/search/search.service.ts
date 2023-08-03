@@ -16,8 +16,8 @@ export class OnSearchService {
       console.log('in bpp');
 
       // forwarding request to providers
-      const url = 'https://roots-dev.vsoftproducts.com:8082/wings-interface/safalIntegration/getProductInformation';
-      // const url = 'process.env.TEST_API_URI + '/search''
+      const url = process.env.BANK_URL + "/wings-interface/safalIntegration/getProductInformation"
+      console.log("Url - ", url)
       const responseCatalog = await lastValueFrom(
         this.httpService
           .post(url, searchDTO, {
@@ -27,8 +27,8 @@ export class OnSearchService {
           })
           .pipe(map((item) => item.data)),
       );
-      
       (responseCatalog as any).context = searchDTO.context;
+      console.log("Url 2- ", url)
       responseCatalog.context.action = 'on_search';
       if(responseCatalog.error === null) {
         delete responseCatalog['error']

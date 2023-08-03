@@ -14,7 +14,7 @@ export class TrackService {
 
     // call the Bank server to get the response
     try {
-      const url = 'https://roots-dev.vsoftproducts.com:8082/wings-interface/safalIntegration/trackApplicationStatus';
+      const url = process.env.BANK_URL + "/wings-interface/safalIntegration/trackApplicationStatus"
       const trackingResponse = await lastValueFrom(
         this.httpService
         .post(url, body, {
