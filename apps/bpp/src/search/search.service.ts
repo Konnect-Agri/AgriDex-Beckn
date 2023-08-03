@@ -16,7 +16,10 @@ export class OnSearchService {
       console.log('in bpp');
 
       // forwarding request to providers
-      const url = process.env.BANK_URL + "/wings-interface/safalIntegration/getProductInformation"
+      console.log("Search statred @ " + Date.now())
+      console.log("BANK_URL - " + process.env.BANK_URL)
+      console.log("TEST_API_URI - " + process.env.TEST_API_URI)
+      const url = process.env.BANK_URL + '/wings-interface/safalIntegration/getProductInformation'
       console.log("Url - ", url)
       const responseCatalog = await lastValueFrom(
         this.httpService
