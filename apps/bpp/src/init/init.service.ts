@@ -17,8 +17,7 @@ export class InitService {
       }
       console.log("Init statred @ " + Date.now())
 
-      const url = 'https://roots-dev.vsoftproducts.com:8082/wings-interface/safalIntegration/initiateSTLoanApplication';
-      // const url2 = process.env.TEST_API_URI + "/init"
+      const url = process.env.BANK_URL + "/wings-interface/safalIntegration/initiateSTLoanApplication"
       const resp = await lastValueFrom(
         this.httpService
           .post(url, initDto, {
@@ -37,6 +36,8 @@ export class InitService {
         delete resp.message.order.fulfillments[0].id
         
       } 
+      // Handling for impropoer response
+      // delete resp.message.order.orderId
       try {
         const authHeader = await createAuthorizationHeader(resp).then(
           (res) => {
@@ -44,6 +45,7 @@ export class InitService {
             return res;
           },
         );
+
         console.log('auth header: ', authHeader);
 
         const requestOptions = {

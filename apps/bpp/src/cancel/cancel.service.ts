@@ -13,7 +13,8 @@ export class CancelService {
 
     // call the Bank server to get the response
     try {
-      const url = 'https://roots-dev.vsoftproducts.com:8082/wings-interface/safalIntegration/cancelApplication';
+      const url = process.env.BANK_URL + "/wings-interface/safalIntegration/cancelApplication"
+
       const cancelRes = await lastValueFrom(
         this.httpService
         .post(url, body, {
