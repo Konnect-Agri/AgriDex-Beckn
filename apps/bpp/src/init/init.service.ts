@@ -16,8 +16,11 @@ export class InitService {
         throw new Error('Invalid Context: bap_uri is missing');
       }
       console.log("Init statred @ " + Date.now())
-
-      const url = process.env.BANK_URL + "/wings-interface/safalIntegration/initiateSTLoanApplication"
+      console.log("BANK_URL - " + process.env.BANK_URL)
+      console.log("TEST_API_URI - " + process.env.TEST_API_URI)
+      console.log("Created URL - " + process.env.BANK_URL + '/wings-interface/safalIntegration/initiateSTLoanApplication')
+      const url = "http://117.251.193.184:8080/wings-interface/safalIntegration/initiateSTLoanApplication"
+      console.log("Hardcoded Url - ", url)
       const resp = await lastValueFrom(
         this.httpService
           .post(url, initDto, {
@@ -45,7 +48,6 @@ export class InitService {
             return res;
           },
         );
-
         console.log('auth header: ', authHeader);
 
         const requestOptions = {

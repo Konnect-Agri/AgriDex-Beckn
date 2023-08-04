@@ -14,7 +14,12 @@ export class TrackService {
 
     // call the Bank server to get the response
     try {
-      const url = process.env.BANK_URL + "/wings-interface/safalIntegration/trackApplicationStatus"
+      console.log("Track statred @ " + Date.now())
+      console.log("BANK_URL - " + process.env.BANK_URL)
+      console.log("TEST_API_URI - " + process.env.TEST_API_URI)
+      console.log("Created URL - " + process.env.BANK_URL + '/wings-interface/safalIntegration/trackApplicationStatus')
+      const url = "http://117.251.193.184:8080/wings-interface/safalIntegration/trackApplicationStatus"
+      console.log("Hardcoded Url - ", url)
       const trackingResponse = await lastValueFrom(
         this.httpService
         .post(url, body, {
@@ -24,7 +29,7 @@ export class TrackService {
         })
           .pipe(map((item) => item.data)),
       );
-
+      console.log("Response from bank - " , trackingResponse)
       trackingResponse.context = body.context
       trackingResponse.context.action = 'on_track';
       if(trackingResponse.error === null) {
