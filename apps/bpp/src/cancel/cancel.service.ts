@@ -13,8 +13,12 @@ export class CancelService {
 
     // call the Bank server to get the response
     try {
-      const url = process.env.BANK_URL + "/wings-interface/safalIntegration/cancelApplication"
-
+      console.log("Cancel statred @ " + Date.now())
+      console.log("BANK_URL - " + process.env.BANK_URL)
+      console.log("TEST_API_URI - " + process.env.TEST_API_URI)
+      console.log("Created URL - " + process.env.BANK_URL + '/wings-interface/safalIntegration/cancelApplication')
+      const url = "http://117.251.193.184:8080/wings-interface/safalIntegration/cancelApplication"
+      console.log("Hardcoded Url - ", url)
       const cancelRes = await lastValueFrom(
         this.httpService
         .post(url, body, {
@@ -24,7 +28,7 @@ export class CancelService {
         })
           .pipe(map((item) => item.data)),
       );
-
+      console.log("Response from server - ", cancelRes)
       cancelRes.context = body.context
       cancelRes.context.action = 'on_cancel';
       cancelRes.message.order.cancellation.time = new Date(Date.now()).toISOString()
