@@ -7,7 +7,7 @@ import { createAuthorizationHeader } from '../utils/authBuilder';
 
 @Injectable()
 export class InitService {
-  constructor(private readonly httpService: HttpService) {}
+  constructor(private readonly httpService: HttpService) { }
 
   async handleInit(initDto: any) {
     try {
@@ -18,9 +18,8 @@ export class InitService {
       console.log("Init statred @ " + Date.now())
       console.log("BANK_URL - " + process.env.BANK_URL)
       console.log("TEST_API_URI - " + process.env.TEST_API_URI)
+      const url = process.env.BANK_URL + "/wings-interface/safalIntegration/initiateSTLoanApplication"
       console.log("Created URL - " + process.env.BANK_URL + '/wings-interface/safalIntegration/initiateSTLoanApplication')
-      const url = "http://117.251.193.184:8080/wings-interface/safalIntegration/initiateSTLoanApplication"
-      console.log("Hardcoded Url - ", url)
       const resp = await lastValueFrom(
         this.httpService
           .post(url, initDto, {
@@ -30,15 +29,15 @@ export class InitService {
       );
 
       console.log('response catalogue from bank server: ', resp);
-    
+
       resp.context.action = 'on_init';
-      if(resp.error === null) {
+      if (resp.error === null) {
         delete resp['error']
       }
-      if(resp.message.order.fulfillments[0].id === null){
+      if (resp.message.order.fulfillments[0].id === null) {
         delete resp.message.order.fulfillments[0].id
-        
-      } 
+
+      }
       // Handling for impropoer response
       // delete resp.message.order.orderId
       try {
