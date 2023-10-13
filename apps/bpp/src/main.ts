@@ -2,9 +2,12 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { BppModule } from './bpp.module';
 import * as Sentry from '@sentry/node';
+import * as bodyParser from 'body-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(BppModule);
+  app.use(bodyParser.json({limit: '50mb'}));
+  app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
   Sentry.init({
     dsn: "https://11b27c6c778d42a396527d42a0ea5428@bugs.samagra.io/6",
   
